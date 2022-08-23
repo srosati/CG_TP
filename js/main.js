@@ -20,7 +20,7 @@ const car = new Car({
 	y: 0,
 	z: 0,
 	wheelColor: 0x000099,
-	bodyLength: 1.5,
+	bodyLength: 1.2,
 	bodyWidth: 0.8,
 	bodyHeight: 0.5,
 	wheelRadius: 0.18,
@@ -38,7 +38,6 @@ function animate() {
 animate();
 
 document.addEventListener('keydown', onDocumentKeyDown, false);
-
 function onDocumentKeyDown(event) {
 	var keyCode = event.which;
 	if (keyCode == 87) {
