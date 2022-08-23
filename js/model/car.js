@@ -1,61 +1,42 @@
-import { BoxGeometry, MeshBasicMaterial, CylinderGeometry, Mesh } from '../../../build/three.module.js';
+import { BoxGeometry, MeshBasicMaterial, CylinderGeometry, Mesh, Object3D } from '../../../build/three.module.js';
+import Lift from './lift.js';
 
-class CarBody {
+class CarBody extends Mesh {
 	constructor({ color, bodyLength, bodyHeight, bodyWidth }) {
 		const geometry = new BoxGeometry(bodyWidth, bodyHeight, bodyLength);
 		const material = new MeshBasicMaterial({ color: color });
-		this.body = new Mesh(geometry, material);
+		super(geometry, material);
 	}
 
 	show(parent) {
-		parent.add(this.body);
+		parent.add(this);
 	}
 
 	setPosition(x, y, z) {
-		this.body.position.set(x, y, z);
-	}
-
-	add(child) {
-		this.body.add(child);
-	}
-
-	moveForward() {
-		this.body.translateZ(0.1);
-	}
-
-	moveBackward() {
-		this.body.translateZ(-0.1);
-	}
-
-	rotateLeft() {
-		this.body.rotateY(0.06);
-	}
-
-	rotateRight() {
-		this.body.rotateY(-0.06);
+		this.position.set(x, y, z);
 	}
 }
 
-class CarWheel {
+class CarWheel extends Mesh {
 	constructor({ color, radius, depth, x, y, z, rotation = 0.1 }) {
 		const geometry = new CylinderGeometry(radius, radius, depth, 32);
 		const material = new MeshBasicMaterial({ color: color });
-		this.wheel = new Mesh(geometry, material);
-		this.wheel.position.set(x, y, z);
-		this.wheel.rotateZ(Math.PI / 2);
-		this.rotation = rotation;
+		super(geometry, material);
+		this.position.set(x, y, z);
+		this.rotateZ(Math.PI / 2);
+		this.rotationSpeed = rotation;
 	}
 
 	show(parent) {
-		parent.add(this.wheel);
+		parent.add(this);
 	}
 
 	update() {
-		this.wheel.rotateY(this.rotation);
+		this.rotateY(this.rotationSpeed);
 	}
 }
 
-export default class Car {
+export default class Car extends Object3D {
 	constructor({
 		color = 0x009900,
 		x = 0,
@@ -68,9 +49,9 @@ export default class Car {
 		wheelRadius = 0.2,
 		wheelDepth = 0.04
 	}) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		super();
+
+		this.position.set(x, y, z);
 		this.body = new CarBody({ color, bodyHeight, bodyLength, bodyWidth });
 		this.wheels = [];
 		for (let i = 0; i < 4; i++) {
@@ -83,12 +64,24 @@ export default class Car {
 				})
 			);
 		}
+
+		this.lift = new Lift({
+			height: 3 * bodyHeight,
+			barColor: 0x555555,
+			barSeparation: (3 * bodyWidth) / 4,
+			barWidth: bodyWidth / 10,
+			platformColor: 0x555555,
+			z: bodyLength / 2,
+			y: -bodyHeight / 2,
+			x: 0
+		});
 	}
 
 	show(parent) {
-		this.body.setPosition(this.x, this.y, this.z);
-		this.body.show(parent);
-		for (let wheel of this.wheels) wheel.show(this.body);
+		parent.add(this);
+		this.body.show(this);
+		this.lift.show(this);
+		for (let wheel of this.wheels) wheel.show(this);
 	}
 
 	update() {
@@ -96,19 +89,19 @@ export default class Car {
 	}
 
 	moveForward() {
-		this.body.moveForward();
+		this.translateZ(0.1);
 	}
 
 	moveBackward() {
-		this.body.moveBackward();
+		this.translateZ(-0.1);
 	}
 
 	rotateLeft() {
-		this.body.rotateLeft();
+		this.rotateY(0.06);
 	}
 
 	rotateRight() {
-		this.body.rotateRight();
+		this.rotateY(-0.06);
 	}
 }
 
