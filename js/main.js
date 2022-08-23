@@ -28,14 +28,20 @@ const car = new Car({
 });
 car.show(scene);
 
-function animate() {
-	requestAnimationFrame(animate);
-	car.update();
+let lastTime;
 
+function animate(currentTime) {
+	requestAnimationFrame(animate);
+
+	if (!lastTime) lastTime = 0;
+	let dt = currentTime - lastTime;
+	lastTime = currentTime;
+
+	car.update(dt);
 	renderer.render(scene, camera);
 }
 
-animate();
+requestAnimationFrame(animate);
 
 const KEY_CODES = {
 	W: 87,
@@ -67,6 +73,24 @@ function onDocumentKeyDown(event) {
 			break;
 		case KEY_CODES.E:
 			car.liftDown();
+			break;
+	}
+}
+
+document.addEventListener('keyup', onDocumentKeyUp, false);
+function onDocumentKeyUp(event) {
+	switch (event.which) {
+		case KEY_CODES.W:
+		case KEY_CODES.S:
+			car.stopMove();
+			break;
+		case KEY_CODES.A:
+		case KEY_CODES.D:
+			car.stopRotate();
+			break;
+		case KEY_CODES.Q:
+		case KEY_CODES.E:
+			car.stopLift();
 			break;
 	}
 }

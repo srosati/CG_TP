@@ -15,16 +15,29 @@ class Platform extends Mesh {
 		const material = new MeshBasicMaterial({ color: color });
 		super(geometry, material);
 
-		this.speed = height / 4;
+		this.movementSpeed = height / 200;
+		this.speed = 0;
 		this.position.set(x, y, z);
 	}
 
+	update(dt) {
+		this.translateY(this.speed * dt);
+	}
+
+	move(speed) {
+		this.speed = speed;
+	}
+
 	moveUp() {
-		this.translateY(this.speed);
+		this.move(this.movementSpeed);
 	}
 
 	moveDown() {
-		this.translateY(-this.speed);
+		this.move(-this.movementSpeed);
+	}
+
+	stop() {
+		this.speed = 0;
 	}
 }
 
@@ -45,11 +58,19 @@ export default class Lift extends Object3D {
 		this.add(this.platform);
 	}
 
+	update(dt) {
+		this.platform.update(dt);
+	}
+
 	moveUp() {
 		this.platform.moveUp();
 	}
 
 	moveDown() {
 		this.platform.moveDown();
+	}
+
+	stop() {
+		this.platform.stop();
 	}
 }

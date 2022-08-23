@@ -23,6 +23,7 @@ class Wheel extends Mesh {
 		const material = new MeshBasicMaterial({ color: color });
 		super(geometry, material);
 		this.radius = radius;
+		this.speed = 0;
 		this.position.set(x, y, z);
 		this.rotateZ(Math.PI / 2);
 	}
@@ -31,12 +32,16 @@ class Wheel extends Mesh {
 		parent.add(this);
 	}
 
-	// update() {
-	// 	this.rotateY(this.rotationSpeed);
-	// }
+	update(dt) {
+		this.rotateY(this.speed * dt);
+	}
 
 	rotate(speed) {
-		this.rotateY(speed / radius);
+		this.speed = speed / this.radius;
+	}
+
+	stopRotate() {
+		this.speed = 0;
 	}
 }
 export default class Car extends Object3D {
@@ -76,8 +81,11 @@ export default class Car extends Object3D {
 			x: 0
 		});
 
-		this.speed = bodyLength / 10;
-		this.rotationSpeed = bodyWidth / 50;
+		this.movingSpeed = bodyLength / 300;
+		this.rotatingSpeed = bodyWidth / 2000;
+
+		this.speed = 0;
+		this.rotationSpeed = 0;
 	}
 
 	generateWheels(color, radius, depth, x, y, z) {
@@ -106,26 +114,45 @@ export default class Car extends Object3D {
 		for (let wheel of this.wheels) wheel.show(this);
 	}
 
-	update() {
-		// this.wheels.forEach((wheel) => wheel.update());
+	update(dt) {
+		this.wheels.forEach((wheel) => wheel.update(dt));
+		this.lift.update(dt);
+		this.translateZ(this.speed * dt);
+		this.rotateY(this.rotationSpeed * dt);
+	}
+
+	move(speed) {
+		this.speed = speed;
+		this.wheels.forEach((wheel) => wheel.rotate(speed));
 	}
 
 	moveForward() {
-		this.translateZ(this.speed);
-		this.wheels.forEach((wheel) => wheel.rotate(this.speed));
+		this.move(this.movingSpeed);
 	}
 
 	moveBackward() {
-		this.translateZ(-this.speed);
-		this.wheels.forEach((wheel) => wheel.rotate(-this.speed));
+		this.move(-this.movingSpeed);
+	}
+
+	stopMove() {
+		this.speed = 0;
+		this.wheels.forEach((wheel) => wheel.stopRotate());
+	}
+
+	rotate(speed) {
+		this.rotationSpeed = speed;
 	}
 
 	rotateLeft() {
-		this.rotateY(this.rotationSpeed);
+		this.rotate(this.rotatingSpeed);
 	}
 
 	rotateRight() {
-		this.rotateY(-this.rotationSpeed);
+		this.rotate(-this.rotatingSpeed);
+	}
+
+	stopRotate() {
+		this.rotationSpeed = 0;
 	}
 
 	liftUp() {
@@ -134,5 +161,9 @@ export default class Car extends Object3D {
 
 	liftDown() {
 		this.lift.moveDown();
+	}
+
+	stopLift() {
+		this.lift.stop();
 	}
 }
