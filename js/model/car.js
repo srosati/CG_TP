@@ -18,21 +18,25 @@ class Body extends Mesh {
 }
 
 class Wheel extends Mesh {
-	constructor({ color, radius, depth, x, y, z, rotation = 0.1 }) {
+	constructor({ color, radius, depth, x, y, z }) {
 		const geometry = new CylinderGeometry(radius, radius, depth, 32);
 		const material = new MeshBasicMaterial({ color: color });
 		super(geometry, material);
+		this.radius = radius;
 		this.position.set(x, y, z);
 		this.rotateZ(Math.PI / 2);
-		this.rotationSpeed = rotation;
 	}
 
 	show(parent) {
 		parent.add(this);
 	}
 
-	update() {
-		this.rotateY(this.rotationSpeed);
+	// update() {
+	// 	this.rotateY(this.rotationSpeed);
+	// }
+
+	rotate(speed) {
+		this.rotateY(speed / radius);
 	}
 }
 export default class Car extends Object3D {
@@ -64,12 +68,16 @@ export default class Car extends Object3D {
 			height: 3 * bodyHeight,
 			barColor: 0x555555,
 			barSeparation: (3 * bodyWidth) / 4,
-			barWidth: bodyWidth / 10,
-			platformColor: 0x555555,
+			barWidth: bodyWidth / 15,
+			platformColor: 0xe89b27,
+			platformWidth: bodyWidth,
 			z: bodyLength / 2,
 			y: -bodyHeight / 2,
 			x: 0
 		});
+
+		this.speed = bodyLength / 10;
+		this.rotationSpeed = bodyWidth / 50;
 	}
 
 	generateWheels(color, radius, depth, x, y, z) {
@@ -99,22 +107,32 @@ export default class Car extends Object3D {
 	}
 
 	update() {
-		this.wheels.forEach((wheel) => wheel.update());
+		// this.wheels.forEach((wheel) => wheel.update());
 	}
 
 	moveForward() {
-		this.translateZ(0.08);
+		this.translateZ(this.speed);
+		this.wheels.forEach((wheel) => wheel.rotate(this.speed));
 	}
 
 	moveBackward() {
-		this.translateZ(-0.08);
+		this.translateZ(-this.speed);
+		this.wheels.forEach((wheel) => wheel.rotate(-this.speed));
 	}
 
 	rotateLeft() {
-		this.rotateY(0.06);
+		this.rotateY(this.rotationSpeed);
 	}
 
 	rotateRight() {
-		this.rotateY(-0.06);
+		this.rotateY(-this.rotationSpeed);
+	}
+
+	liftUp() {
+		this.lift.moveUp();
+	}
+
+	liftDown() {
+		this.lift.moveDown();
 	}
 }
