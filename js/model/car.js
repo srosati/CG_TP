@@ -1,7 +1,7 @@
 import { BoxGeometry, MeshBasicMaterial, CylinderGeometry, Mesh, Object3D } from '../../../build/three.module.js';
 import Lift from './lift.js';
 
-class CarBody extends Mesh {
+class Body extends Mesh {
 	constructor({ color, bodyLength, bodyHeight, bodyWidth }) {
 		const geometry = new BoxGeometry(bodyWidth, bodyHeight, bodyLength);
 		const material = new MeshBasicMaterial({ color: color });
@@ -17,25 +17,33 @@ class CarBody extends Mesh {
 	}
 }
 
-class CarWheel extends Mesh {
-	constructor({ color, radius, depth, x, y, z, rotation = 0.1 }) {
+class Wheel extends Mesh {
+	constructor({ color, radius, depth, x, y, z }) {
 		const geometry = new CylinderGeometry(radius, radius, depth, 32);
 		const material = new MeshBasicMaterial({ color: color });
 		super(geometry, material);
+		this.radius = radius;
+		this.speed = 0;
 		this.position.set(x, y, z);
 		this.rotateZ(Math.PI / 2);
-		this.rotationSpeed = rotation;
 	}
 
 	show(parent) {
 		parent.add(this);
 	}
 
-	update() {
-		this.rotateY(this.rotationSpeed);
+	update(dt) {
+		this.rotateY(this.speed * dt);
+	}
+
+	rotate(speed) {
+		this.speed = speed / this.radius;
+	}
+
+	stopRotate() {
+		this.speed = 0;
 	}
 }
-
 export default class Car extends Object3D {
 	constructor({
 		color = 0x009900,
@@ -52,29 +60,51 @@ export default class Car extends Object3D {
 		super();
 
 		this.position.set(x, y, z);
-		this.body = new CarBody({ color, bodyHeight, bodyLength, bodyWidth });
+		this.body = new Body({ color, bodyHeight, bodyLength, bodyWidth });
+
+		const offsetX = (bodyWidth + wheelDepth) / 2;
+		const offsetY = -bodyHeight / 2;
+		const offsetZ = (bodyLength - wheelRadius) / 2;
+
 		this.wheels = [];
-		for (let i = 0; i < 4; i++) {
-			this.wheels.push(
-				new CarWheel({
-					color: wheelColor,
-					radius: wheelRadius,
-					depth: wheelDepth,
-					...calculateWheelPosition(i, wheelDepth, bodyLength, bodyWidth, bodyHeight)
-				})
-			);
-		}
+		this.generateWheels(wheelColor, wheelRadius, wheelDepth, offsetX, offsetY, offsetZ);
 
 		this.lift = new Lift({
 			height: 3 * bodyHeight,
 			barColor: 0x555555,
 			barSeparation: (3 * bodyWidth) / 4,
-			barWidth: bodyWidth / 10,
-			platformColor: 0x555555,
+			barWidth: bodyWidth / 15,
+			platformColor: 0xe89b27,
+			platformWidth: bodyWidth,
 			z: bodyLength / 2,
 			y: -bodyHeight / 2,
 			x: 0
 		});
+
+		this.movingSpeed = bodyLength / 300;
+		this.rotatingSpeed = bodyWidth / 2000;
+
+		this.speed = 0;
+		this.rotationSpeed = 0;
+	}
+
+	generateWheels(color, radius, depth, x, y, z) {
+		const baseObj = {
+			color,
+			radius,
+			depth,
+			y
+		};
+
+		for (let i = 0; i < 4; i++) {
+			this.wheels.push(
+				new Wheel({
+					...baseObj,
+					x: x * (i % 2 ? 1 : -1),
+					z: z * (i < 2 ? 1 : -1)
+				})
+			);
+		}
 	}
 
 	show(parent) {
@@ -84,54 +114,56 @@ export default class Car extends Object3D {
 		for (let wheel of this.wheels) wheel.show(this);
 	}
 
-	update() {
-		this.wheels.forEach((wheel) => wheel.update());
+	update(dt) {
+		this.wheels.forEach((wheel) => wheel.update(dt));
+		this.lift.update(dt);
+		this.translateZ(this.speed * dt);
+		this.rotateY(this.rotationSpeed * dt);
+	}
+
+	move(speed) {
+		this.speed = speed;
+		this.wheels.forEach((wheel) => wheel.rotate(speed));
 	}
 
 	moveForward() {
-		this.translateZ(0.1);
+		this.move(this.movingSpeed);
 	}
 
 	moveBackward() {
-		this.translateZ(-0.1);
+		this.move(-this.movingSpeed);
+	}
+
+	stopMove() {
+		this.speed = 0;
+		this.wheels.forEach((wheel) => wheel.stopRotate());
+	}
+
+	rotate(speed) {
+		this.rotationSpeed = speed;
 	}
 
 	rotateLeft() {
-		this.rotateY(0.06);
+		this.rotate(this.rotatingSpeed);
 	}
 
 	rotateRight() {
-		this.rotateY(-0.06);
+		this.rotate(-this.rotatingSpeed);
 	}
-}
 
-function calculateWheelPosition(idx, depth, bodyLength, bodyWidth, bodyHeight) {
-	let offsetX = (bodyWidth + depth) / 2;
+	stopRotate() {
+		this.rotationSpeed = 0;
+	}
 
-	switch (idx) {
-		case 0:
-			return {
-				z: bodyLength / 3,
-				x: offsetX,
-				y: -bodyHeight / 2
-			};
-		case 1:
-			return {
-				z: bodyLength / 3,
-				x: -offsetX,
-				y: -bodyHeight / 2
-			};
-		case 2:
-			return {
-				z: -bodyLength / 3,
-				x: offsetX,
-				y: -bodyHeight / 2
-			};
-		case 3:
-			return {
-				z: -bodyLength / 3,
-				x: -offsetX,
-				y: -bodyHeight / 2
-			};
+	liftUp() {
+		this.lift.moveUp();
+	}
+
+	liftDown() {
+		this.lift.moveDown();
+	}
+
+	stopLift() {
+		this.lift.stop();
 	}
 }

@@ -10,9 +10,9 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // camera.rotateX(Math.PI / 3);
-camera.position.z = 5;
-camera.position.y = 1;
-camera.position.x = 3;
+camera.position.z = 50;
+camera.position.y = 10;
+camera.position.x = 30;
 
 const car = new Car({
 	color: 0x009900,
@@ -20,34 +20,77 @@ const car = new Car({
 	y: 0,
 	z: 0,
 	wheelColor: 0x000099,
-	bodyLength: 1.5,
-	bodyWidth: 0.8,
-	bodyHeight: 0.5,
-	wheelRadius: 0.18,
-	wheelDepth: 0.1
+	bodyLength: 12,
+	bodyWidth: 8,
+	bodyHeight: 5,
+	wheelRadius: 2,
+	wheelDepth: 1
 });
 car.show(scene);
 
-function animate() {
-	requestAnimationFrame(animate);
-	car.update();
+let lastTime;
 
+function animate(currentTime) {
+	requestAnimationFrame(animate);
+
+	if (!lastTime) lastTime = 0;
+	let dt = currentTime - lastTime;
+	lastTime = currentTime;
+
+	car.update(dt);
 	renderer.render(scene, camera);
 }
 
-animate();
+requestAnimationFrame(animate);
+
+const KEY_CODES = {
+	W: 87,
+	S: 83,
+	A: 65,
+	D: 68,
+	Q: 81,
+	E: 69,
+	G: 71
+};
 
 document.addEventListener('keydown', onDocumentKeyDown, false);
-
 function onDocumentKeyDown(event) {
-	var keyCode = event.which;
-	if (keyCode == 87) {
-		car.moveForward();
-	} else if (keyCode == 83) {
-		car.moveBackward();
-	} else if (keyCode == 65) {
-		car.rotateLeft();
-	} else if (keyCode == 68) {
-		car.rotateRight();
+	switch (event.which) {
+		case KEY_CODES.W:
+			car.moveForward();
+			break;
+		case KEY_CODES.S:
+			car.moveBackward();
+			break;
+		case KEY_CODES.A:
+			car.rotateLeft();
+			break;
+		case KEY_CODES.D:
+			car.rotateRight();
+			break;
+		case KEY_CODES.Q:
+			car.liftUp();
+			break;
+		case KEY_CODES.E:
+			car.liftDown();
+			break;
+	}
+}
+
+document.addEventListener('keyup', onDocumentKeyUp, false);
+function onDocumentKeyUp(event) {
+	switch (event.which) {
+		case KEY_CODES.W:
+		case KEY_CODES.S:
+			car.stopMove();
+			break;
+		case KEY_CODES.A:
+		case KEY_CODES.D:
+			car.stopRotate();
+			break;
+		case KEY_CODES.Q:
+		case KEY_CODES.E:
+			car.stopLift();
+			break;
 	}
 }
