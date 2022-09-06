@@ -1,12 +1,12 @@
 import {
-	BoxGeometry,
 	MeshBasicMaterial,
-	CylinderGeometry,
 	Mesh,
 	Object3D,
 	Shape,
 	ExtrudeGeometry,
 	Vector2,
+	Vector3,
+	Curve,
 	MeshNormalMaterial
 } from '../../../build/three.module.js';
 import Lift from './lift.js';
@@ -36,7 +36,7 @@ class Body extends Mesh {
 			bevelEnabled: false
 		});
 
-		const material = new MeshBasicMaterial({ color: color });
+		const material = new MeshNormalMaterial({ color: color });
 
 		super(geometry, material);
 		this.rotateY(Math.PI / 2);
@@ -53,14 +53,37 @@ class Body extends Mesh {
 }
 
 class Wheel extends Mesh {
-	constructor({ color, radius, depth, x, y, z }) {
-		const geometry = new CylinderGeometry(radius, radius, depth, 32);
-		const material = new MeshBasicMaterial({ color: color });
+	constructor({ color, radius, depth, x, y, z, isLeft }) {
+		const width = depth / 2;
+		const shortWidth = 0.5 * width;
+		const shape = new Shape([
+			new Vector2(-width, 0),
+			new Vector2(width, 0),
+			new Vector2(width, 0.3 * radius),
+			new Vector2(shortWidth, 0.4 * radius),
+			new Vector2(shortWidth, radius),
+			new Vector2(-width, radius),
+			new Vector2(-width, 0)
+		]);
+
+		const path = new Curve();
+		path.getPoint = function (t) {
+			const angle = 2 * Math.PI * t;
+			return new Vector3(radius * Math.cos(angle), radius * Math.sin(angle), 0);
+		};
+
+		const geometry = new ExtrudeGeometry(shape, {
+			steps: 16,
+			extrudePath: path
+		});
+
+		const material = new MeshNormalMaterial({ color: color });
 		super(geometry, material);
 		this.radius = radius;
 		this.speed = 0;
 		this.position.set(x, y, z);
-		this.rotateZ(Math.PI / 2);
+		const mul = isLeft ? 1 : -1;
+		this.rotateY((mul * Math.PI) / 2);
 	}
 
 	show(parent) {
@@ -68,7 +91,7 @@ class Wheel extends Mesh {
 	}
 
 	update(dt) {
-		this.rotateY(this.speed * dt);
+		this.rotateZ(this.speed * dt);
 	}
 
 	rotate(speed) {
@@ -99,7 +122,7 @@ export default class Car extends Object3D {
 
 		const offsetX = (bodyWidth + wheelDepth) / 2;
 		const offsetY = -bodyHeight / 2;
-		const offsetZ = (bodyLength - wheelRadius) / 2;
+		const offsetZ = (bodyLength - wheelRadius) / 2.5;
 
 		this.wheels = [];
 		this.generateWheels(wheelColor, wheelRadius, wheelDepth, offsetX, offsetY, offsetZ);
@@ -135,6 +158,7 @@ export default class Car extends Object3D {
 			this.wheels.push(
 				new Wheel({
 					...baseObj,
+					isLeft: i % 2 === 0,
 					x: x * (i % 2 ? 1 : -1),
 					z: z * (i < 2 ? 1 : -1)
 				})
