@@ -10,18 +10,25 @@ class Bar extends Mesh {
 }
 
 class Platform extends Mesh {
-	constructor(color, width, height, x, y, z) {
+	constructor(color, width, height, x, y, z, minHeight, maxHeight) {
 		const geometry = new BoxGeometry(width, height, width);
 		const material = new MeshBasicMaterial({ color: color });
 		super(geometry, material);
 
-		this.movementSpeed = height / 200;
+		this.minHeight = minHeight;
+		this.maxHeight = maxHeight;
+
+		this.movementSpeed = height / 150;
 		this.speed = 0;
 		this.position.set(x, y, z);
 	}
 
 	update(dt) {
-		this.translateY(this.speed * dt);
+		if (
+			(this.speed > 0 && this.position.y < this.maxHeight) ||
+			(this.speed < 0 && this.position.y > this.minHeight)
+		)
+			this.translateY(this.speed * dt);
 	}
 
 	move(speed) {
@@ -47,7 +54,16 @@ export default class Lift extends Object3D {
 
 		this.bar_l = new Bar(barColor, barWidth, height, -barSeparation / 2, height / 2, barWidth / 2);
 		this.bar_r = new Bar(barColor, barWidth, height, barSeparation / 2, height / 2, barWidth / 2);
-		this.platform = new Platform(platformColor, platformWidth, height / 20, 0, height / 2, platformWidth / 2);
+		this.platform = new Platform(
+			platformColor,
+			platformWidth,
+			height / 20,
+			0,
+			height / 2,
+			platformWidth / 2,
+			0,
+			height
+		);
 		this.position.set(x, y, z);
 	}
 

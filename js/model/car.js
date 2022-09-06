@@ -81,8 +81,8 @@ export default class Car extends Object3D {
 			x: 0
 		});
 
-		this.movingSpeed = bodyLength / 300;
-		this.rotatingSpeed = bodyWidth / 2000;
+		this.movingSpeed = bodyLength / 500;
+		this.rotatingSpeed = bodyWidth / 5000;
 
 		this.speed = 0;
 		this.rotationSpeed = 0;
