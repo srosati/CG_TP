@@ -1,11 +1,46 @@
-import { BoxGeometry, MeshBasicMaterial, CylinderGeometry, Mesh, Object3D } from '../../../build/three.module.js';
+import {
+	BoxGeometry,
+	MeshBasicMaterial,
+	CylinderGeometry,
+	Mesh,
+	Object3D,
+	Shape,
+	ExtrudeGeometry,
+	Vector2,
+	MeshNormalMaterial
+} from '../../../build/three.module.js';
 import Lift from './lift.js';
 
 class Body extends Mesh {
 	constructor({ color, bodyLength, bodyHeight, bodyWidth }) {
-		const geometry = new BoxGeometry(bodyWidth, bodyHeight, bodyLength);
+		const shortHeight = 0.25 * bodyHeight;
+		const shortLen = 0.35 * bodyLength;
+
+		const len = bodyLength / 2;
+		const height = bodyHeight / 2;
+
+		const shape = new Shape([
+			new Vector2(-shortLen, -height),
+			new Vector2(-len, -shortHeight),
+			new Vector2(-len, shortHeight),
+			new Vector2(-shortLen, height),
+			new Vector2(shortLen, height),
+			new Vector2(len, shortHeight),
+			new Vector2(len, -shortHeight),
+			new Vector2(shortLen, -height),
+			new Vector2(-shortLen, -height)
+		]);
+
+		const geometry = new ExtrudeGeometry(shape, {
+			depth: bodyWidth,
+			bevelEnabled: false
+		});
+
 		const material = new MeshBasicMaterial({ color: color });
+
 		super(geometry, material);
+		this.rotateY(Math.PI / 2);
+		this.translateZ(-bodyWidth / 2);
 	}
 
 	show(parent) {
@@ -71,7 +106,7 @@ export default class Car extends Object3D {
 
 		this.lift = new Lift({
 			height: 3 * bodyHeight,
-			barColor: 0x555555,
+			barColor: 0x888888,
 			barSeparation: (3 * bodyWidth) / 4,
 			barWidth: bodyWidth / 15,
 			platformColor: 0xe89b27,
