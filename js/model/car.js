@@ -154,7 +154,7 @@ export default class Car extends Object3D {
 
 		this.lift = new Lift({
 			height: 5 * bodyHeight,
-			barColor: 0x888888,
+			barColor: 0xaaaaaa,
 			barSeparation: (3 * bodyWidth) / 4,
 			barWidth: bodyWidth / 20,
 			platformColor: 0xe89b27,
