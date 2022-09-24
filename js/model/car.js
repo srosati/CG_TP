@@ -10,6 +10,7 @@ import {
 } from '../../../build/three.module.js';
 import Extrusion from './extrusion.js';
 import Lift from './lift.js';
+import Revolution from './revolution.js';
 
 class Body extends Extrusion {
 	constructor({ color, bodyLength, bodyHeight, bodyWidth }) {
@@ -55,42 +56,26 @@ class BodyDecoration extends Extrusion {
 	}
 }
 
-class Wheel extends Mesh {
+class Wheel extends Revolution {
 	constructor({ color, radius, depth, x, y, z, isLeft }) {
 		const width = depth / 2;
 		const shortWidth = 0.5 * width;
-		const shape = new Shape([
-			new Vector2(-width, 0),
-			new Vector2(width, 0),
-			new Vector2(width, 0.3 * radius),
-			new Vector2(shortWidth, 0.4 * radius),
-			new Vector2(shortWidth, radius),
-			new Vector2(-width, radius),
-			new Vector2(-width, 0)
-		]);
 
-		const path = new Curve();
-		path.getPoint = function (t) {
-			const angle = 2 * Math.PI * t;
-			return new Vector3(radius * Math.cos(angle), radius * Math.sin(angle), 0);
-		};
+		const points = [
+			[-width, 0],
+			[width, 0],
+			[width, 0.3 * radius],
+			[shortWidth, 0.4 * radius],
+			[shortWidth, radius],
+			[-width, radius],
+			[-width, 0]
+		];
 
-		const geometry = new ExtrudeGeometry(shape, {
-			steps: 16,
-			extrudePath: path
-		});
+		const mul = isLeft ? 1 : -1;
 
-		const material = new MeshNormalMaterial({ color: color });
-		super(geometry, material);
+		super({ color, radius, points, x, y, z, rotation: [0, (mul * Math.PI) / 2, 0] });
 		this.radius = radius;
 		this.speed = 0;
-		this.position.set(x, y, z);
-		const mul = isLeft ? 1 : -1;
-		this.rotateY((mul * Math.PI) / 2);
-	}
-
-	show(parent) {
-		parent.add(this);
 	}
 
 	update(dt) {

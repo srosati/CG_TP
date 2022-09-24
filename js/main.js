@@ -2,6 +2,7 @@ import { Scene, PerspectiveCamera, WebGLRenderer } from '../../build/three.modul
 
 import Car from './model/car.js';
 import Shelf from './model/shelf.js';
+import Printer from './model/printer.js';
 
 const scene = new Scene();
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -12,8 +13,9 @@ document.body.appendChild(renderer.domElement);
 
 // camera.rotateX(Math.PI / 3);
 camera.position.z = 50;
-camera.position.y = 10;
-camera.position.x = 30;
+camera.position.y = 20;
+camera.position.x = 10;
+camera.lookAt(scene.position);
 
 const car = new Car({
 	color: 0x009900,
@@ -31,14 +33,17 @@ car.show(scene);
 
 const shelf = new Shelf({
 	color: 0x009900,
-	width: 50,
+	width: 40,
 	height: 20,
 	depth: 5,
 	x: 0,
 	y: 0,
-	z: 0
+	z: -10
 });
 shelf.show(scene);
+
+const printer = new Printer({color: 0x009900, x: -40, y: 0, z: 0, width: 12, height: 6, depth: 10});
+printer.show(scene);
 
 
 let lastTime;

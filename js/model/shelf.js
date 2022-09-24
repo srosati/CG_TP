@@ -38,6 +38,7 @@ export default class Shelf extends Object3D {
         this.generateBars(height, width, depth, x, y, z);
         this.generateRacks(height, width, depth, x, y, z);
         this.position.set(x, y, z);
+        this.rotateY(- Math.PI / 3);
     }
 
     show(parent) {
