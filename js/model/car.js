@@ -1,5 +1,4 @@
 import {
-	MeshBasicMaterial,
 	Mesh,
 	Object3D,
 	Shape,
@@ -9,46 +8,50 @@ import {
 	Curve,
 	MeshNormalMaterial
 } from '../../../build/three.module.js';
+import Extrusion from './extrusion.js';
 import Lift from './lift.js';
 
-class Body extends Mesh {
+class Body extends Extrusion {
 	constructor({ color, bodyLength, bodyHeight, bodyWidth }) {
 		const shortHeight = 0.25 * bodyHeight;
-		const shortLen = 0.35 * bodyLength;
+		const shortLen = 0.4 * bodyLength;
 
 		const len = bodyLength / 2;
 		const height = bodyHeight / 2;
 
-		const shape = new Shape([
-			new Vector2(-shortLen, -height),
-			new Vector2(-len, -shortHeight),
-			new Vector2(-len, shortHeight),
-			new Vector2(-shortLen, height),
-			new Vector2(shortLen, height),
-			new Vector2(len, shortHeight),
-			new Vector2(len, -shortHeight),
-			new Vector2(shortLen, -height),
-			new Vector2(-shortLen, -height)
-		]);
+		const points = [
+			[-shortLen, -height],
+			[-len, -shortHeight],
+			[-len, shortHeight],
+			[-shortLen, height],
+			[shortLen, height],
+			[len, shortHeight],
+			[len, -shortHeight],
+			[shortLen, -height],
+			[-shortLen, -height]
+		];
 
-		const geometry = new ExtrudeGeometry(shape, {
-			depth: bodyWidth,
-			bevelEnabled: false
-		});
-
-		const material = new MeshNormalMaterial({ color: color });
-
-		super(geometry, material);
-		this.rotateY(Math.PI / 2);
+		super({ color, points, depth: bodyWidth, rotation: [0, Math.PI / 2, 0], x: 0, y: 0, z: 0 });
 		this.translateZ(-bodyWidth / 2);
-	}
-
-	show(parent) {
-		parent.add(this);
 	}
 
 	setPosition(x, y, z) {
 		this.position.set(x, y, z);
+	}
+}
+
+class BodyDecoration extends Extrusion {
+	constructor({ color, width, shortLen, longLen, height, x, y, z, mirror = true }) {
+		const points = [
+			[0, 0],
+			[mirror ? longLen - shortLen : 0, height],
+			[mirror ? longLen : shortLen, height],
+			[longLen, 0],
+			[0, 0]
+		];
+
+		super({ color: color, points: points, depth: width, rotation: [0, Math.PI / 2, 0], x, y, z });
+		this.translateZ(-width / 2);
 	}
 }
 
@@ -119,6 +122,28 @@ export default class Car extends Object3D {
 
 		this.position.set(x, y, z);
 		this.body = new Body({ color, bodyHeight, bodyLength, bodyWidth });
+		this.dec1 = new BodyDecoration({
+			color: '#AAAAAA',
+			width: 0.7 * bodyWidth,
+			height: 1.5 * bodyHeight,
+			longLen: 0.14 * bodyLength,
+			shortLen: 0.07 * bodyLength,
+			x: 0,
+			y: bodyHeight / 2,
+			z: -0.15 * bodyLength
+		});
+
+		this.dec2 = new BodyDecoration({
+			color: '#AAAAAA',
+			width: 0.7 * bodyWidth,
+			height: 0.4 * bodyHeight,
+			longLen: 0.16 * bodyLength,
+			shortLen: 0.1 * bodyLength,
+			x: 0,
+			y: bodyHeight / 2,
+			z: 0.3 * bodyLength,
+			mirror: false
+		});
 
 		const offsetX = (bodyWidth + wheelDepth) / 2;
 		const offsetY = -bodyHeight / 2;
@@ -128,10 +153,10 @@ export default class Car extends Object3D {
 		this.generateWheels(wheelColor, wheelRadius, wheelDepth, offsetX, offsetY, offsetZ);
 
 		this.lift = new Lift({
-			height: 3 * bodyHeight,
+			height: 5 * bodyHeight,
 			barColor: 0x888888,
 			barSeparation: (3 * bodyWidth) / 4,
-			barWidth: bodyWidth / 15,
+			barWidth: bodyWidth / 20,
 			platformColor: 0xe89b27,
 			platformWidth: bodyWidth,
 			z: bodyLength / 2,
@@ -169,6 +194,8 @@ export default class Car extends Object3D {
 	show(parent) {
 		parent.add(this);
 		this.body.show(this);
+		this.dec1.show(this);
+		this.dec2.show(this);
 		this.lift.show(this);
 		for (let wheel of this.wheels) wheel.show(this);
 	}

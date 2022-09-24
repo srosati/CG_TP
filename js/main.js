@@ -22,7 +22,7 @@ const car = new Car({
 	wheelColor: 0x000099,
 	bodyLength: 12,
 	bodyWidth: 8,
-	bodyHeight: 5,
+	bodyHeight: 4,
 	wheelRadius: 2,
 	wheelDepth: 1
 });
