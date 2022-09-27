@@ -1,13 +1,4 @@
-import {
-	Mesh,
-	Object3D,
-	Shape,
-	ExtrudeGeometry,
-	Vector2,
-	Vector3,
-	Curve,
-	MeshNormalMaterial
-} from '../../../build/three.module.js';
+import { Object3D, Shape, Vector2 } from '../../../build/three.module.js';
 import Extrusion from './extrusion.js';
 import Lift from './lift.js';
 import Revolution from './revolution.js';
@@ -32,7 +23,9 @@ class Body extends Extrusion {
 			[-shortLen, -height]
 		];
 
-		super({ color, points, depth: bodyWidth, rotation: [0, Math.PI / 2, 0], x: 0, y: 0, z: 0 });
+		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+
+		super({ color, shape, depth: bodyWidth, rotation: [0, Math.PI / 2, 0], x: 0, y: 0, z: 0 });
 		this.translateZ(-bodyWidth / 2);
 	}
 
@@ -51,7 +44,9 @@ class BodyDecoration extends Extrusion {
 			[0, 0]
 		];
 
-		super({ color: color, points: points, depth: width, rotation: [0, Math.PI / 2, 0], x, y, z });
+		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+
+		super({ color, shape, depth: width, rotation: [0, Math.PI / 2, 0], x, y, z });
 		this.translateZ(-width / 2);
 	}
 }

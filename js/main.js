@@ -3,6 +3,7 @@ import { Scene, PerspectiveCamera, WebGLRenderer } from '../../build/three.modul
 import Car from './model/car.js';
 import Shelf from './model/shelf.js';
 import Printer from './model/printer.js';
+import B1 from './model/pieces/extrusion/b1.js';
 
 const scene = new Scene();
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -12,7 +13,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // camera.rotateX(Math.PI / 3);
-camera.position.z = 50;
+camera.position.z = 30;
 camera.position.y = 20;
 camera.position.x = 10;
 camera.lookAt(scene.position);
@@ -42,9 +43,8 @@ const shelf = new Shelf({
 });
 shelf.show(scene);
 
-const printer = new Printer({color: 0x009900, x: -40, y: 0, z: 0, width: 12, height: 6, depth: 10});
+const printer = new Printer({ color: 0x009900, x: -40, y: 0, z: 0, width: 12, height: 6, depth: 10 });
 printer.show(scene);
-
 
 let lastTime;
 
@@ -56,12 +56,14 @@ function animate(currentTime) {
 	lastTime = currentTime;
 
 	car.update(dt);
+	printer.update();
 	renderer.render(scene, camera);
 }
 
 requestAnimationFrame(animate);
 
 const KEY_CODES = {
+	SPACE: 32,
 	W: 87,
 	S: 83,
 	A: 65,
@@ -91,6 +93,9 @@ function onDocumentKeyDown(event) {
 			break;
 		case KEY_CODES.E:
 			car.liftDown();
+			break;
+		case KEY_CODES.SPACE:
+			printer.print(B1); // TODO: GUI
 			break;
 	}
 }
