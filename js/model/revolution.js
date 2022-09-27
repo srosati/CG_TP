@@ -1,19 +1,33 @@
-import { Shape, ExtrudeGeometry, Mesh, MeshNormalMaterial, Vector2, Vector3, Curve } from '../../../build/three.module.js';
-
-
+import {
+	Shape,
+	ExtrudeGeometry,
+	Mesh,
+	MeshNormalMaterial,
+	Vector2,
+	Vector3,
+	Curve
+} from '../../../build/three.module.js';
 
 export default class Revolution extends Mesh {
-    constructor({ color, points, radius, rotation = [0,0,0], material = MeshNormalMaterial, x, y, z }) {
-		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+	constructor({
+		color,
+		shape,
+		radius,
+		rotation = [0, 0, 0],
+		material = MeshNormalMaterial,
+		x = 0,
+		y = 0,
+		z = 0,
+		depth = 2 * Math.PI
+	}) {
+		const path = new Curve();
+		path.getPoint = function (t) {
+			const angle = depth * t;
+			return new Vector3(radius * Math.cos(angle), radius * Math.sin(angle), 0);
+		};
 
-        const path = new Curve();
-        path.getPoint = function (t) {
-            const angle =  2 * Math.PI * t;
-            return new Vector3(radius * Math.cos(angle), radius * Math.sin(angle), 0);
-        };
-
-        const geometry = new ExtrudeGeometry(shape, {
-			steps: 16,
+		const geometry = new ExtrudeGeometry(shape, {
+			steps: 32,
 			extrudePath: path
 		});
 

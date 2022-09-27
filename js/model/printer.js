@@ -1,4 +1,12 @@
-import { Object3D, CylinderGeometry, MeshBasicMaterial, Mesh, BoxGeometry } from '../../../build/three.module.js';
+import {
+	Object3D,
+	CylinderGeometry,
+	MeshBasicMaterial,
+	Mesh,
+	BoxGeometry,
+	Shape,
+	Vector2
+} from '../../../build/three.module.js';
 
 import Revolution from './revolution.js';
 
@@ -19,7 +27,9 @@ class Body extends Revolution {
 			[-halfH, radius],
 			[-halfH, 0]
 		];
-		super({ points, color, radius, rotation: [Math.PI / 2, 0, 0], x, y, z /*, material: MeshBasicMaterial*/ });
+
+		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+		super({ shape, color, radius, rotation: [Math.PI / 2, 0, 0], x, y, z /*, material: MeshBasicMaterial*/ });
 	}
 }
 

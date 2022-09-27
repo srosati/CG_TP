@@ -66,9 +66,11 @@ class Wheel extends Revolution {
 			[-width, 0]
 		];
 
+		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+
 		const mul = isLeft ? 1 : -1;
 
-		super({ color, radius, points, x, y, z, rotation: [0, (mul * Math.PI) / 2, 0] });
+		super({ color, radius, shape, x, y, z, rotation: [0, (mul * Math.PI) / 2, 0] });
 		this.radius = radius;
 		this.speed = 0;
 	}
