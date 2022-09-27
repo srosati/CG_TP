@@ -78,6 +78,8 @@ export default class Printer extends Object3D {
 	}
 
 	print(piece) {
+		if (this.piece) return;
+
 		this.piece = new piece({ y: this.height / 2, twist: 2 * Math.PI });
 		this.piece.show(this);
 	}
@@ -86,5 +88,13 @@ export default class Printer extends Object3D {
 		if (this.piece) {
 			this.piece.update();
 		}
+	}
+
+	removePiece() {
+		if (this.piece == null) return null;
+		this.remove(this.piece);
+		const piece = this.piece;
+		this.piece = null;
+		return piece;
 	}
 }

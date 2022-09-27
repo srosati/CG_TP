@@ -234,4 +234,12 @@ export default class Car extends Object3D {
 	stopLift() {
 		this.lift.stop();
 	}
+
+	grabPiece(printer) {
+		if (printer == null || printer.piece == null || this.piece != null) return;
+
+		this.piece = printer.removePiece();
+		this.piece.position.y = 0;
+		this.piece.show(this.lift.platform);
+	}
 }

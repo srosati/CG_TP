@@ -22,7 +22,7 @@ let fp = false;
 let controls = new OrbitControls(camera, renderer.domElement);
 controls.update();
 controls.target.set(scene.position.x, scene.position.y, scene.position.z);
-let relativeCameraOffset = new Vector3(0,15,-25);
+let relativeCameraOffset = new Vector3(0, 15, -25);
 
 const car = new Car({
 	color: 0x009900,
@@ -63,17 +63,17 @@ function animate(currentTime) {
 
 	car.update(dt);
 	printer.update();
-	
+
 	if (orbital) {
 		controls.update();
 	} else {
 		let auxCameraOffset = new Vector3(relativeCameraOffset.x, relativeCameraOffset.y, relativeCameraOffset.z);
-	 	let cameraOffset = auxCameraOffset.applyMatrix4(car.matrixWorld);
+		let cameraOffset = auxCameraOffset.applyMatrix4(car.matrixWorld);
 
-	 	camera.position.x = cameraOffset.x;
-	 	camera.position.y = cameraOffset.y;
-	 	camera.position.z = cameraOffset.z;
-	 	camera.lookAt(car.position.x, car.position.y, car.position.z);
+		camera.position.x = cameraOffset.x;
+		camera.position.y = cameraOffset.y;
+		camera.position.z = cameraOffset.z;
+		camera.lookAt(car.position.x, car.position.y, car.position.z);
 	}
 	renderer.render(scene, camera);
 }
@@ -94,7 +94,7 @@ const KEY_CODES = {
 	three: 51,
 	four: 52,
 	five: 53,
-	six: 54,
+	six: 54
 };
 
 document.addEventListener('keydown', onDocumentKeyDown, false);
@@ -118,10 +118,13 @@ function onDocumentKeyDown(event) {
 		case KEY_CODES.E:
 			car.liftDown();
 			break;
+		case KEY_CODES.G:
+			car.grabPiece(printer);
+			break;
 		case KEY_CODES.SPACE:
 			printer.print(B1); // TODO: GUI
 			break;
-		case KEY_CODES.one: 
+		case KEY_CODES.one:
 			orbital = true;
 			controls.target.set(scene.position.x, scene.position.y, scene.position.z);
 			break;
@@ -131,25 +134,28 @@ function onDocumentKeyDown(event) {
 			break;
 		case KEY_CODES.three:
 			orbital = true;
-			controls.target.set(shelf.position.x + shelf.depth / 2 * Math.sin(shelf._rotation), shelf.position.y, shelf.position.z + shelf.width * Math.cos(-Math.PI / 3));
+			controls.target.set(
+				shelf.position.x + (shelf.depth / 2) * Math.sin(shelf._rotation),
+				shelf.position.y,
+				shelf.position.z + shelf.width * Math.cos(-Math.PI / 3)
+			);
 			break;
 		case KEY_CODES.four:
 			orbital = false;
 			fp = true;
-			relativeCameraOffset = new Vector3(0,15,-25);
+			relativeCameraOffset = new Vector3(0, 15, -25);
 			// camera.position.set(car.position.x, car.position.y, car.position.z);
 			break;
 		case KEY_CODES.five:
 			orbital = false;
 			fp = false;
-			relativeCameraOffset = new Vector3(0,15,-25);
+			relativeCameraOffset = new Vector3(0, 15, -25);
 			break;
 		case KEY_CODES.six:
 			orbital = false;
 			fp = false;
-			relativeCameraOffset = new Vector3(25,15,0);
+			relativeCameraOffset = new Vector3(25, 15, 0);
 			break;
-
 	}
 }
 
