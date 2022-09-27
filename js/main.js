@@ -1,4 +1,5 @@
-import { Scene, PerspectiveCamera, WebGLRenderer } from '../../build/three.module.js';
+import { Scene, PerspectiveCamera, WebGLRenderer, Vector3 } from '../../build/three.module.js';
+import { OrbitControls } from '../../examples/jsm/controls/OrbitControls.js';
 
 import Car from './model/car.js';
 import Shelf from './model/shelf.js';
@@ -12,15 +13,20 @@ const renderer = new WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// camera.rotateX(Math.PI / 3);
-camera.position.z = 30;
+camera.position.z = 50;
 camera.position.y = 20;
 camera.position.x = 10;
-camera.lookAt(scene.position);
+
+let orbital = true;
+let fp = false;
+let controls = new OrbitControls(camera, renderer.domElement);
+controls.update();
+controls.target.set(scene.position.x, scene.position.y, scene.position.z);
+let relativeCameraOffset = new Vector3(0,15,-25);
 
 const car = new Car({
 	color: 0x009900,
-	x: 5,
+	x: 0,
 	y: 0,
 	z: 0,
 	wheelColor: 0x000099,
@@ -39,7 +45,7 @@ const shelf = new Shelf({
 	depth: 5,
 	x: 0,
 	y: 0,
-	z: -10
+	z: 10
 });
 shelf.show(scene);
 
@@ -57,6 +63,18 @@ function animate(currentTime) {
 
 	car.update(dt);
 	printer.update();
+	
+	if (orbital) {
+		controls.update();
+	} else {
+		let auxCameraOffset = new Vector3(relativeCameraOffset.x, relativeCameraOffset.y, relativeCameraOffset.z);
+	 	let cameraOffset = auxCameraOffset.applyMatrix4(car.matrixWorld);
+
+	 	camera.position.x = cameraOffset.x;
+	 	camera.position.y = cameraOffset.y;
+	 	camera.position.z = cameraOffset.z;
+	 	camera.lookAt(car.position.x, car.position.y, car.position.z);
+	}
 	renderer.render(scene, camera);
 }
 
@@ -70,7 +88,13 @@ const KEY_CODES = {
 	D: 68,
 	Q: 81,
 	E: 69,
-	G: 71
+	G: 71,
+	one: 49,
+	two: 50,
+	three: 51,
+	four: 52,
+	five: 53,
+	six: 54,
 };
 
 document.addEventListener('keydown', onDocumentKeyDown, false);
@@ -97,6 +121,35 @@ function onDocumentKeyDown(event) {
 		case KEY_CODES.SPACE:
 			printer.print(B1); // TODO: GUI
 			break;
+		case KEY_CODES.one: 
+			orbital = true;
+			controls.target.set(scene.position.x, scene.position.y, scene.position.z);
+			break;
+		case KEY_CODES.two:
+			orbital = true;
+			controls.target.set(printer.position.x, printer.position.y, printer.position.z);
+			break;
+		case KEY_CODES.three:
+			orbital = true;
+			controls.target.set(shelf.position.x + shelf.depth / 2 * Math.sin(shelf._rotation), shelf.position.y, shelf.position.z + shelf.width * Math.cos(-Math.PI / 3));
+			break;
+		case KEY_CODES.four:
+			orbital = false;
+			fp = true;
+			relativeCameraOffset = new Vector3(0,15,-25);
+			// camera.position.set(car.position.x, car.position.y, car.position.z);
+			break;
+		case KEY_CODES.five:
+			orbital = false;
+			fp = false;
+			relativeCameraOffset = new Vector3(0,15,-25);
+			break;
+		case KEY_CODES.six:
+			orbital = false;
+			fp = false;
+			relativeCameraOffset = new Vector3(25,15,0);
+			break;
+
 	}
 }
 
