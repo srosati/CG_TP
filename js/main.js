@@ -73,7 +73,7 @@ function animate(currentTime) {
 		camera.position.x = cameraOffset.x;
 		camera.position.y = cameraOffset.y;
 		camera.position.z = cameraOffset.z;
-		camera.lookAt(car.position.x, car.position.y, car.position.z);
+		camera.lookAt(car.position.x, car.position.y + fp ? 6 : 0, car.position.z);
 	}
 	renderer.render(scene, camera);
 }
@@ -143,8 +143,7 @@ function onDocumentKeyDown(event) {
 		case KEY_CODES.four:
 			orbital = false;
 			fp = true;
-			relativeCameraOffset = new Vector3(0, 15, -25);
-			// camera.position.set(car.position.x, car.position.y, car.position.z);
+			relativeCameraOffset = new Vector3(0, 6, -2);
 			break;
 		case KEY_CODES.five:
 			orbital = false;
