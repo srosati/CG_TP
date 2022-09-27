@@ -58,10 +58,8 @@ class Extruder extends Mesh {
 
 	show(parent) {
 		parent.add(this);
-		this.add(this.cube);
 	}
 }
-
 export default class Printer extends Object3D {
 	constructor({ color, height, width, x, y, z }) {
 		super();
