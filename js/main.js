@@ -1,5 +1,6 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper } from '../../build/three.module.js';
 import { OrbitControls } from '../../examples/jsm/controls/OrbitControls.js';
+import { GUI } from './libs/dat.gui.module.js'; 
 
 import Car from './model/car.js';
 import Shelf from './model/shelf.js';
@@ -13,6 +14,26 @@ const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight,
 const renderer = new WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+/**
+ * GUI
+ */
+const gui = new GUI();
+const options = {
+	Forma: 0,
+	Altura: 1,
+	AnguloDeTorsion: 0,
+
+}
+
+gui.add(options, 'AnguloDeTorsion', 0, 90).onChange((val) => {
+});
+gui.add(options, 'Altura', 1, 10).onChange((val) => {
+});
+gui.add(options, 'Forma', {A1: 0, A2: 1, A3: 2, A4: 3, B1: 4, B2: 5, B3: 6, B4: 7}).onChange((val) => {
+	console.log(val);	
+});
+
 
 camera.position.z = 50;
 camera.position.y = 20;
@@ -54,12 +75,12 @@ car.show(scene);
 
 const shelf = new Shelf({
 	color: 0x009900,
-	width: 40,
+	width: 60,
 	height: 20,
 	depth: 5,
-	x: 0,
+	x: 20,
 	y: 0,
-	z: 10
+	z: -30
 });
 shelf.show(scene);
 
