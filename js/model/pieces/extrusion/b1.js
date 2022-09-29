@@ -12,6 +12,6 @@ export default class B1 extends ExtrusionPiece {
 		shape.lineTo(sideLen / 2, -h / 3);
 		shape.lineTo(-sideLen / 2, -h / 3);
 
-		super({ shape, x, y, z, color, twist, height: sideLen, steps });
+		super({ shape, x, y, z, color, twist, height, steps });
 	}
 }

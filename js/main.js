@@ -1,11 +1,14 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper } from '../../build/three.module.js';
 import { OrbitControls } from '../../examples/jsm/controls/OrbitControls.js';
-import { GUI } from './libs/dat.gui.module.js'; 
+import { GUI } from './libs/dat.gui.module.js';
 
 import Car from './model/car.js';
 import Shelf from './model/shelf.js';
 import Printer from './model/printer.js';
 import B1 from './model/pieces/extrusion/b1.js';
+import B2 from './model/pieces/extrusion/b2.js';
+import B3 from './model/pieces/extrusion/b3.js';
+import B4 from './model/pieces/extrusion/b4.js';
 import House from './model/house.js';
 
 const scene = new Scene();
@@ -22,18 +25,14 @@ const gui = new GUI();
 const options = {
 	Forma: 0,
 	Altura: 1,
-	AnguloDeTorsion: 0,
+	AnguloDeTorsion: 0
+};
 
-}
-
-gui.add(options, 'AnguloDeTorsion', 0, 90, 10).onChange((val) => {
+gui.add(options, 'AnguloDeTorsion', 0, 90, 10).onChange((val) => {});
+gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {});
+gui.add(options, 'Forma', { A1: 0, A2: 1, A3: 2, A4: 3, B1: 4, B2: 5, B3: 6, B4: 7 }).onChange((val) => {
+	console.log(val);
 });
-gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
-});
-gui.add(options, 'Forma', {A1: 0, A2: 1, A3: 2, A4: 3, B1: 4, B2: 5, B3: 6, B4: 7}).onChange((val) => {
-	console.log(val);	
-});
-
 
 camera.position.z = 50;
 camera.position.y = 20;
@@ -52,12 +51,12 @@ const house = new House({
 	z: 0,
 	width: 200,
 	height: 50,
-	depth: 200,
+	depth: 200
 });
 house.show(scene);
 
-var gridHelper = new GridHelper( 200, 20, 0x000000, 0x000000 );
-scene.add( gridHelper );
+var gridHelper = new GridHelper(200, 20, 0x000000, 0x000000);
+scene.add(gridHelper);
 
 const car = new Car({
 	color: 0x009900,
@@ -157,7 +156,7 @@ function onDocumentKeyDown(event) {
 			car.grabPiece(printer);
 			break;
 		case KEY_CODES.SPACE:
-			printer.print(B1); // TODO: GUI
+			printer.print(B4); // TODO: GUI
 			break;
 		case KEY_CODES.one:
 			orbital = true;
