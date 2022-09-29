@@ -1,10 +1,11 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Vector3 } from '../../build/three.module.js';
+import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, AmbientLight, Mesh, PlaneGeometry, MeshBasicMaterial } from '../../build/three.module.js';
 import { OrbitControls } from '../../examples/jsm/controls/OrbitControls.js';
 
 import Car from './model/car.js';
 import Shelf from './model/shelf.js';
 import Printer from './model/printer.js';
 import B1 from './model/pieces/extrusion/b1.js';
+import House from './model/house.js';
 
 const scene = new Scene();
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -24,10 +25,23 @@ controls.update();
 controls.target.set(scene.position.x, scene.position.y, scene.position.z);
 let relativeCameraOffset = new Vector3(0, 15, -25);
 
+const ambienLight=new AmbientLight(0x404040);
+// scene.add(ambienLight);
+
+const house = new House({
+	x: 0,
+	y: 0,
+	z: 0,
+	width: 200,
+	height: 50,
+	depth: 200,
+});
+house.show(scene);
+
 const car = new Car({
 	color: 0x009900,
 	x: 0,
-	y: 0,
+	y: 4,
 	z: 0,
 	wheelColor: 0x000099,
 	bodyLength: 12,
@@ -49,7 +63,7 @@ const shelf = new Shelf({
 });
 shelf.show(scene);
 
-const printer = new Printer({ color: 0x009900, x: -40, y: 0, z: 0, width: 12, height: 6, depth: 10 });
+const printer = new Printer({ color: 0x009900, x: -40, y: 3, z: 0, width: 12, height: 6, depth: 10 });
 printer.show(scene);
 
 let lastTime;
