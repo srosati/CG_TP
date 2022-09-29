@@ -26,9 +26,9 @@ const options = {
 
 }
 
-gui.add(options, 'AnguloDeTorsion', 0, 90).onChange((val) => {
+gui.add(options, 'AnguloDeTorsion', 0, 90, 10).onChange((val) => {
 });
-gui.add(options, 'Altura', 1, 10).onChange((val) => {
+gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
 });
 gui.add(options, 'Forma', {A1: 0, A2: 1, A3: 2, A4: 3, B1: 4, B2: 5, B3: 6, B4: 7}).onChange((val) => {
 	console.log(val);	
