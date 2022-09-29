@@ -73,7 +73,7 @@ function animate(currentTime) {
 		camera.position.x = cameraOffset.x;
 		camera.position.y = cameraOffset.y;
 		camera.position.z = cameraOffset.z;
-		camera.lookAt(car.position.x, car.position.y + fp ? 6 : 0, car.position.z);
+		camera.lookAt(car.position.x, car.position.y + fp ? 10 : 0, car.position.z);
 	}
 	renderer.render(scene, camera);
 }
