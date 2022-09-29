@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, AmbientLight, Mesh, PlaneGeometry, MeshBasicMaterial } from '../../build/three.module.js';
+import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper } from '../../build/three.module.js';
 import { OrbitControls } from '../../examples/jsm/controls/OrbitControls.js';
 
 import Car from './model/car.js';
@@ -25,9 +25,6 @@ controls.update();
 controls.target.set(scene.position.x, scene.position.y, scene.position.z);
 let relativeCameraOffset = new Vector3(0, 15, -25);
 
-const ambienLight=new AmbientLight(0x404040);
-// scene.add(ambienLight);
-
 const house = new House({
 	x: 0,
 	y: 0,
@@ -37,6 +34,9 @@ const house = new House({
 	depth: 200,
 });
 house.show(scene);
+
+var gridHelper = new GridHelper( 200, 20, 0x000000, 0x000000 );
+scene.add( gridHelper );
 
 const car = new Car({
 	color: 0x009900,
