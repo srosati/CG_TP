@@ -28,14 +28,27 @@ document.body.appendChild(renderer.domElement);
 const gui = new GUI();
 const options = {
 	Forma: 0,
-	Altura: 1,
+	Altura: 10,
 	AnguloDeTorsion: 0
 };
 
-gui.add(options, 'AnguloDeTorsion', 0, 90, 10).onChange((val) => {});
-gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {});
+let selectedPiece = A1;
+let pieceOptions = {
+	twist: 0,
+	height: 10
+};
+
+const POSSIBLE_PIECES = [A1, A2, A3, A4, B1, B2, B3, B4];
+gui.add(options, 'AnguloDeTorsion', 0, 360, 10).onChange((val) => {
+	pieceOptions.twist = (val * Math.PI) / 180;
+});
+
+gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
+	pieceOptions.height = val;
+});
+
 gui.add(options, 'Forma', { A1: 0, A2: 1, A3: 2, A4: 3, B1: 4, B2: 5, B3: 6, B4: 7 }).onChange((val) => {
-	console.log(val);
+	selectedPiece = POSSIBLE_PIECES[val];
 });
 
 camera.position.z = 50;
@@ -160,7 +173,7 @@ function onDocumentKeyDown(event) {
 			car.grabPiece(printer);
 			break;
 		case KEY_CODES.SPACE:
-			printer.print(A4); // TODO: GUI
+			printer.print(selectedPiece, pieceOptions); // TODO: GUI
 			break;
 		case KEY_CODES.one:
 			orbital = true;

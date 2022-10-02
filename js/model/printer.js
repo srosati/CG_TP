@@ -75,10 +75,10 @@ export default class Printer extends Object3D {
 		parent.add(this);
 	}
 
-	print(piece) {
+	print(piece, options) {
 		if (this.piece) return;
 
-		this.piece = new piece({ y: this.height / 2, twist: Math.PI / 2 });
+		this.piece = new piece({ ...options, y: this.height / 2 });
 		this.piece.show(this);
 	}
 
