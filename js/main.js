@@ -9,6 +9,10 @@ import B1 from './model/pieces/extrusion/b1.js';
 import B2 from './model/pieces/extrusion/b2.js';
 import B3 from './model/pieces/extrusion/b3.js';
 import B4 from './model/pieces/extrusion/b4.js';
+import A1 from './model/pieces/revolution/a1.js';
+import A2 from './model/pieces/revolution/a2.js';
+import A3 from './model/pieces/revolution/a3.js';
+import A4 from './model/pieces/revolution/a4.js';
 import House from './model/house.js';
 
 const scene = new Scene();
@@ -156,7 +160,7 @@ function onDocumentKeyDown(event) {
 			car.grabPiece(printer);
 			break;
 		case KEY_CODES.SPACE:
-			printer.print(B4); // TODO: GUI
+			printer.print(A4); // TODO: GUI
 			break;
 		case KEY_CODES.one:
 			orbital = true;
