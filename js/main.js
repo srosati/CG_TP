@@ -1,4 +1,12 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight } from '../../build/three.module.js';
+import {
+	Scene,
+	PerspectiveCamera,
+	WebGLRenderer,
+	Vector3,
+	GridHelper,
+	DirectionalLight,
+	AmbientLight
+} from '../../build/three.module.js';
 import { OrbitControls } from './libs/OrbitControls.js';
 import { GUI } from './libs/dat.gui.module.js';
 
@@ -25,7 +33,6 @@ const renderer = new WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-
 /**
  * Lights
  */
@@ -38,22 +45,22 @@ scene.add(ambientLight);
 /**
  * GUI Configuration
  */
- const SUPERFICIES = {
+const SUPERFICIES = {
 	Revolucion: 0,
 	Barrido: 1
-}
+};
 const FORMAS_REVOLUCION = {
 	A1: 0,
 	A2: 1,
 	A3: 2,
 	A4: 3
-}
+};
 const FORMAS_BARRIDO = {
 	B1: 0,
 	B2: 1,
 	B3: 2,
 	B4: 3
-}
+};
 
 const gui = new GUI();
 const options = {
@@ -63,7 +70,8 @@ const options = {
 	Altura: 10,
 	AnguloDeTorsion: 0,
 	Imprimir: () => {
-		selectedPiece = POSSIBLE_PIECES[superficie][superficie == SUPERFICIES.Revolucion ? formaRevolucion : formaBarrido];
+		selectedPiece =
+			POSSIBLE_PIECES[superficie][superficie == SUPERFICIES.Revolucion ? formaRevolucion : formaBarrido];
 		printer.print(selectedPiece, pieceOptions);
 	}
 };
@@ -77,7 +85,10 @@ let pieceOptions = {
 	height: 10
 };
 
-const POSSIBLE_PIECES = [[A1, A2, A3, A4], [B1, B2, B3, B4]];
+const POSSIBLE_PIECES = [
+	[A1, A2, A3, A4],
+	[B1, B2, B3, B4]
+];
 gui.add(options, 'AnguloDeTorsion', 0, 360, 10).onChange((val) => {
 	pieceOptions.twist = (val * Math.PI) / 180;
 });
@@ -86,7 +97,7 @@ gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
 	pieceOptions.height = val;
 });
 
-gui.add(options, 'Superficie', {Revolucion: 0, Barrido: 1}).onChange((val) => {
+gui.add(options, 'Superficie', { Revolucion: 0, Barrido: 1 }).onChange((val) => {
 	superficie = val;
 });
 
@@ -100,14 +111,12 @@ gui.add(options, 'FormaBarrido', { B1: 0, B2: 1, B3: 2, B4: 3 }).onChange((val) 
 
 gui.add(options, 'Imprimir');
 
-
 /**
  * Initial Camera Position
  */
 camera.position.z = 50;
 camera.position.y = 20;
 camera.position.x = 10;
-
 
 /**
  * Camera Controls
@@ -119,7 +128,6 @@ controls.update();
 controls.target.set(scene.position.x, scene.position.y, scene.position.z);
 let relativeCameraOffset = new Vector3(0, 15, -25);
 // zoom in/out with o/p keys
-
 
 /**
  * Galpon (traducir a ingles)
@@ -136,7 +144,6 @@ house.show(scene);
 
 var gridHelper = new GridHelper(200, 20, 0x000000, 0x000000);
 scene.add(gridHelper);
-
 
 /**
  * Car
@@ -155,7 +162,6 @@ const car = new Car({
 });
 car.show(scene);
 
-
 /**
  * Shelf
  */
@@ -170,18 +176,18 @@ const shelf = new Shelf({
 });
 shelf.show(scene);
 
-
 /**
  * Printer
  */
-const printer = new Printer({ 
-	color: 0x009900, 
-	x: -40, 
-	y: 3, 
-	z: 0, 
-	width: 12, 
-	height: 6, 
-	depth: 10 });
+const printer = new Printer({
+	color: 0x009900,
+	x: -40,
+	y: 3,
+	z: 0,
+	width: 12,
+	height: 6,
+	depth: 10
+});
 printer.show(scene);
 
 let lastTime;
@@ -194,7 +200,7 @@ function animate(currentTime) {
 	lastTime = currentTime;
 
 	car.update(dt);
-	printer.update();
+	printer.update(dt);
 
 	if (orbital) {
 		controls.update();
@@ -292,7 +298,7 @@ function onDocumentKeyDown(event) {
 			break;
 		case KEY_CODES.three:
 			orbital = true;
-			controls.target.set(shelf.position.x,shelf.position.y,shelf.position.z);
+			controls.target.set(shelf.position.x, shelf.position.y, shelf.position.z);
 			break;
 		case KEY_CODES.four:
 			orbital = false;

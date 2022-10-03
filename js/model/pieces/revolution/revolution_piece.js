@@ -8,22 +8,37 @@ export default class RevolutionPiece extends Revolution {
 		this.shape = shape;
 		this.steps = steps;
 		this.color = color;
-		this.depth_step = (2 * Math.PI) / steps;
-		this.step = 0;
+		this.acc_depth = 0;
+		this.print_speed = 0.004;
+		// this.depth_step = (2 * Math.PI) / steps;
+		// this.step = 0;
 	}
 
-	update() {
-		if (this.step >= this.steps) return;
+	update(dt) {
+		if (this.acc_depth >= 2 * Math.PI) return -1;
 
-		this.step++;
+		let depth = this.print_speed * dt;
+		if (this.acc_height + depth > this.height) depth = this.height - this.acc_height;
+
+		if (depth > 0.1) {
+			let res1 = this.update(dt / 2);
+			if (res1 == -1) return -1;
+			let res2 = this.update(dt / 2);
+			if (res2 == -1) return -1;
+			return 0;
+		}
+
 		const newPart = new Revolution({
 			shape: this.shape,
-			depth: this.depth_step,
+			depth: depth,
 			color: this.color,
 			radius: this.radius,
-			rotation: [0, 0, this.depth_step * this.step]
+			rotation: [0, 0, this.acc_depth]
 		});
 
+		this.acc_depth += depth;
+
 		newPart.show(this);
+		return 0;
 	}
 }

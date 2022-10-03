@@ -9,6 +9,7 @@ import {
 } from '../../../build/three.module.js';
 
 import Revolution from './revolution.js';
+import Extrusion from './extrusion.js';
 
 class Body extends Revolution {
 	constructor({ color, height, width, x, y, z }) {
@@ -46,6 +47,10 @@ class Arm extends Mesh {
 		parent.add(this);
 		this.extruder.show(this);
 	}
+
+	update(depth) {
+		this.extruder.update(depth);
+	}
 }
 
 class Extruder extends Mesh {
@@ -58,6 +63,10 @@ class Extruder extends Mesh {
 
 	show(parent) {
 		parent.add(this);
+	}
+
+	update(depth) {
+		if (depth > 0) this.translateY(depth);
 	}
 }
 export default class Printer extends Object3D {
@@ -79,12 +88,20 @@ export default class Printer extends Object3D {
 		if (this.piece) return;
 
 		this.piece = new piece({ ...options, y: this.height / 2 });
+		this.printingAnimation = this.piece instanceof Extrusion;
+		this.updateDepth = true;
+		console.log(this.printingAnimation);
+		if (this.printingAnimation) this.arm.extruder.position.setY(-1.5 * this.height);
+
 		this.piece.show(this);
 	}
 
-	update() {
-		if (this.piece) {
-			this.piece.update();
+	update(dt) {
+		if (this.piece && this.updateDepth != -1) {
+			this.updateDepth = this.piece.update(dt);
+			if (this.printingAnimation) {
+				this.arm.update(this.updateDepth);
+			}
 		}
 	}
 
