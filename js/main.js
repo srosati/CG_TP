@@ -1,5 +1,5 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight } from '../../build/three.module.js';
-import { OrbitControls } from '../../examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from './libs/OrbitControls.js';
 import { GUI } from './libs/dat.gui.module.js';
 
 import Car from './model/car.js';
