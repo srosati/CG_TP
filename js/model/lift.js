@@ -1,9 +1,9 @@
-import { Object3D, BoxGeometry, MeshBasicMaterial, Mesh } from '../../../build/three.module.js';
+import { Object3D, BoxGeometry, MeshPhysicalMaterial, Mesh } from '../../../build/three.module.js';
 
 class Bar extends Mesh {
 	constructor({ color, width, height, length = width, x, y, z }) {
 		const geometry = new BoxGeometry(width, height, length);
-		const material = new MeshBasicMaterial({ color: color });
+		const material = new MeshPhysicalMaterial({ color: color });
 		super(geometry, material);
 		this.position.set(x, y, z);
 	}
@@ -12,7 +12,7 @@ class Bar extends Mesh {
 class Platform extends Mesh {
 	constructor(color, width, height, x, y, z, minHeight, maxHeight) {
 		const geometry = new BoxGeometry(width, height, width);
-		const material = new MeshBasicMaterial({ color: color });
+		const material = new MeshPhysicalMaterial({ color: color });
 		super(geometry, material);
 
 		this.minHeight = minHeight;

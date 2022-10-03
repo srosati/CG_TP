@@ -1,7 +1,7 @@
 import {
 	Object3D,
 	CylinderGeometry,
-	MeshBasicMaterial,
+	MeshPhysicalMaterial,
 	Mesh,
 	BoxGeometry,
 	Shape,
@@ -37,7 +37,7 @@ class Body extends Revolution {
 class Arm extends Mesh {
 	constructor({ color, height, width, x, y, z }) {
 		const geometry = new CylinderGeometry(0.2, 0.2, height * 2, 16);
-		const material = new MeshBasicMaterial({ color: 0xccd7b6 });
+		const material = new MeshPhysicalMaterial({ color: 0xccd7b6 });
 		super(geometry, material);
 		this.position.set(x, y, z);
 		this.extruder = new Extruder({ color, height, width, x, y, z });
@@ -56,7 +56,7 @@ class Arm extends Mesh {
 class Extruder extends Mesh {
 	constructor({ color, height, width }) {
 		const cubeGeometry = new BoxGeometry(width, 0.1, width);
-		const cubeMaterial = new MeshBasicMaterial({ color: 0xf1dcc9 });
+		const cubeMaterial = new MeshPhysicalMaterial({ color: 0xf1dcc9 });
 		super(cubeGeometry, cubeMaterial);
 		this.position.set(width / 2, height / 2, 0);
 	}
