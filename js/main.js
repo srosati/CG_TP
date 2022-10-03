@@ -38,23 +38,46 @@ scene.add(ambientLight);
 /**
  * GUI Configuration
  */
+ const SUPERFICIES = {
+	Revolucion: 0,
+	Barrido: 1
+}
+const FORMAS_REVOLUCION = {
+	A1: 0,
+	A2: 1,
+	A3: 2,
+	A4: 3
+}
+const FORMAS_BARRIDO = {
+	B1: 0,
+	B2: 1,
+	B3: 2,
+	B4: 3
+}
+
 const gui = new GUI();
 const options = {
-	Forma: 0,
+	Superficie: SUPERFICIES.Revolucion,
+	FormaRevolucion: FORMAS_REVOLUCION.A1,
+	FormaBarrido: FORMAS_BARRIDO.B1,
 	Altura: 10,
 	AnguloDeTorsion: 0,
 	Imprimir: () => {
+		selectedPiece = POSSIBLE_PIECES[superficie][superficie == SUPERFICIES.Revolucion ? formaRevolucion : formaBarrido];
 		printer.print(selectedPiece, pieceOptions);
 	}
 };
 
 let selectedPiece = A1;
+let superficie = SUPERFICIES.Revolucion;
+let formaRevolucion = FORMAS_REVOLUCION.A1;
+let formaBarrido = FORMAS_BARRIDO.B1;
 let pieceOptions = {
 	twist: 0,
 	height: 10
 };
 
-const POSSIBLE_PIECES = [A1, A2, A3, A4, B1, B2, B3, B4];
+const POSSIBLE_PIECES = [[A1, A2, A3, A4], [B1, B2, B3, B4]];
 gui.add(options, 'AnguloDeTorsion', 0, 360, 10).onChange((val) => {
 	pieceOptions.twist = (val * Math.PI) / 180;
 });
@@ -63,8 +86,16 @@ gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
 	pieceOptions.height = val;
 });
 
-gui.add(options, 'Forma', { A1: 0, A2: 1, A3: 2, A4: 3, B1: 4, B2: 5, B3: 6, B4: 7 }).onChange((val) => {
-	selectedPiece = POSSIBLE_PIECES[val];
+gui.add(options, 'Superficie', {Revolucion: 0, Barrido: 1}).onChange((val) => {
+	superficie = val;
+});
+
+gui.add(options, 'FormaRevolucion', { A1: 0, A2: 1, A3: 2, A4: 3 }).onChange((val) => {
+	formaRevolucion = val;
+});
+
+gui.add(options, 'FormaBarrido', { B1: 0, B2: 1, B3: 2, B4: 3 }).onChange((val) => {
+	formaBarrido = val;
 });
 
 gui.add(options, 'Imprimir');
@@ -261,11 +292,7 @@ function onDocumentKeyDown(event) {
 			break;
 		case KEY_CODES.three:
 			orbital = true;
-			controls.target.set(
-				shelf.position.x + (shelf.depth / 2) * Math.sin(shelf._rotation),
-				shelf.position.y,
-				shelf.position.z + shelf.width * Math.cos(-Math.PI / 3)
-			);
+			controls.target.set(shelf.position.x,shelf.position.y,shelf.position.z);
 			break;
 		case KEY_CODES.four:
 			orbital = false;
