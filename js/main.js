@@ -298,7 +298,11 @@ function onDocumentKeyDown(event) {
 			break;
 		case KEY_CODES.three:
 			orbital = true;
-			controls.target.set(shelf.position.x, shelf.position.y, shelf.position.z);
+			controls.target.set(
+				shelf.position.x + shelf.width / 2,
+				shelf.position.y + shelf.height / 2,
+				shelf.position.z + shelf.depth / 2
+			);
 			break;
 		case KEY_CODES.four:
 			orbital = false;
