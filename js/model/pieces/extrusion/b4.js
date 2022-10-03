@@ -3,7 +3,7 @@ import { Shape } from '../../../../../build/three.module.js';
 import ExtrusionPiece from './extrusion_piece.js';
 
 export default class B1 extends ExtrusionPiece {
-	constructor({ x = 0, y = 0, z = 0, color, twist = 0, width = 5, height = 5, steps = 200 }) {
+	constructor({ x = 0, y = 0, z = 0, color, twist = 0, width = 3, height = 5, steps = 200 }) {
 		// Pill Shape
 		const shortWidth = width / 4;
 		const halfShort = shortWidth / 2;

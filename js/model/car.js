@@ -1,4 +1,4 @@
-import { Object3D, Shape, Vector2 } from '../../../build/three.module.js';
+import { Object3D, Shape, Vector2, Vector3 } from '../../../build/three.module.js';
 import Extrusion from './extrusion.js';
 import Lift from './lift.js';
 import Revolution from './revolution.js';
@@ -236,10 +236,23 @@ export default class Car extends Object3D {
 	}
 
 	grabPiece(printer) {
-		if (printer == null || printer.piece == null || this.piece != null) return;
+		if (printer == null || printer.piece == null || this.piece != null) return false;
+		const piecePosition = new Vector3();
+		const platformPosition = new Vector3();
+		printer.piece.localToWorld(piecePosition);
+		this.lift.platform.localToWorld(platformPosition);
+		const distance = piecePosition.distanceTo(platformPosition);
+		if (distance > 5) return false;
 
 		this.piece = printer.removePiece();
 		this.piece.position.y = 0;
+		this.piece.rotateZ(Math.PI / 2);
 		this.piece.show(this.lift.platform);
+		return true;
+	}
+
+	dropPiece() {
+		this.lift.platform.remove(this.piece);
+		this.piece = null;
 	}
 }

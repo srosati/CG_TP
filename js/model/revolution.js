@@ -3,6 +3,8 @@ import {
 	ExtrudeGeometry,
 	Mesh,
 	MeshNormalMaterial,
+	MeshPhongMaterial,
+	MeshPhysicalMaterial,
 	Vector2,
 	Vector3,
 	Curve
@@ -14,7 +16,7 @@ export default class Revolution extends Mesh {
 		shape,
 		radius,
 		rotation = [0, 0, 0],
-		material = MeshNormalMaterial,
+		material = MeshPhysicalMaterial,
 		x = 0,
 		y = 0,
 		z = 0,

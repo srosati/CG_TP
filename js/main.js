@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper } from '../../build/three.module.js';
+import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight } from '../../build/three.module.js';
 import { OrbitControls } from '../../examples/jsm/controls/OrbitControls.js';
 import { GUI } from './libs/dat.gui.module.js';
 
@@ -19,8 +19,16 @@ const scene = new Scene();
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new WebGLRenderer();
+
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+const light = new DirectionalLight(0x404040, 2);
+scene.add(light);
+
+const ambientLight = new AmbientLight(0x404040, 3);
+scene.add(ambientLight);
 
 /**
  * GUI
@@ -29,7 +37,10 @@ const gui = new GUI();
 const options = {
 	Forma: 0,
 	Altura: 10,
-	AnguloDeTorsion: 0
+	AnguloDeTorsion: 0,
+	Imprimir: () => {
+		printer.print(selectedPiece, pieceOptions);
+	}
 };
 
 let selectedPiece = A1;
@@ -50,6 +61,8 @@ gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
 gui.add(options, 'Forma', { A1: 0, A2: 1, A3: 2, A4: 3, B1: 4, B2: 5, B3: 6, B4: 7 }).onChange((val) => {
 	selectedPiece = POSSIBLE_PIECES[val];
 });
+
+gui.add(options, 'Imprimir');
 
 camera.position.z = 50;
 camera.position.y = 20;
@@ -92,7 +105,7 @@ car.show(scene);
 const shelf = new Shelf({
 	color: 0x009900,
 	width: 60,
-	height: 20,
+	height: 34,
 	depth: 5,
 	x: 20,
 	y: 0,
@@ -132,7 +145,6 @@ function animate(currentTime) {
 requestAnimationFrame(animate);
 
 const KEY_CODES = {
-	SPACE: 32,
 	W: 87,
 	S: 83,
 	A: 65,
@@ -170,10 +182,13 @@ function onDocumentKeyDown(event) {
 			car.liftDown();
 			break;
 		case KEY_CODES.G:
-			car.grabPiece(printer);
-			break;
-		case KEY_CODES.SPACE:
-			printer.print(selectedPiece, pieceOptions); // TODO: GUI
+			const grabbed = car.grabPiece(printer);
+			if (!grabbed && car.piece) {
+				const dropped = shelf.addPiece(car.piece);
+				if (dropped) {
+					car.dropPiece();
+				}
+			}
 			break;
 		case KEY_CODES.one:
 			orbital = true;

@@ -1,4 +1,4 @@
-import { MeshBasicMaterial, Mesh, Object3D, BoxGeometry } from '../../../build/three.module.js';
+import { MeshBasicMaterial, Mesh, Object3D, BoxGeometry, Vector2, Vector3 } from '../../../build/three.module.js';
 
 class Bar extends Mesh {
 	constructor(color, width, height, x, y, z) {
@@ -37,8 +37,10 @@ export default class Shelf extends Object3D {
 		this.generateBars(height, width, depth, x, y, z);
 		this.generateRacks(height, width, depth, x, y, z);
 		this.position.set(x, y, z);
-		this._rotation = -Math.PI / 2;
-		this.rotateY(this._rotation);
+
+		this.generatePiecePositions(height, width, depth, x, y, z);
+		//this._rotation = -Math.PI / 2;
+		//this.rotateY(this._rotation);
 	}
 
 	show(parent) {
@@ -57,8 +59,8 @@ export default class Shelf extends Object3D {
 
 	generateBars(height, width, depth, x, y, z) {
 		for (let i = 0; i < this.bars_qty; i++) {
-			this.bars.push(new Bar(0xc8da49, 0.5, height, x + (i * width) / 8, y + height / 2, z));
-			this.bars.push(new Bar(0xc8da49, 0.5, height, x + (i * width) / 8, y + height / 2, z - depth));
+			this.bars.push(new Bar(0xc8da49, 0.5, height, (i * width) / 8, height / 2, 0));
+			this.bars.push(new Bar(0xc8da49, 0.5, height, (i * width) / 8, height / 2, depth));
 		}
 	}
 
@@ -70,11 +72,50 @@ export default class Shelf extends Object3D {
 					width + 2,
 					0.1,
 					depth + 2,
-					x + width / 2,
-					y + (i * height) / 3 + height / 3 - 0.5,
-					z - depth / 2
+					width / 2,
+					(i * height) / 3 + height / 3 - 0.5,
+					depth / 2
 				)
 			);
 		}
+	}
+
+	generatePiecePositions(height, width, depth) {
+		this.piecePositions = []
+		for (let i = 0; i < this.pieces_qty; i++) {
+			const shelfPosition = new Vector3((i % 8) * width / 8 + width / 16, (1 + Math.floor(i / 8)) * height / 3 - 0.5, depth / 2);
+			this.piecePositions.push(shelfPosition);
+		}
+		
+	}
+
+	addPiece(piece) {
+		let minDist = Infinity;
+		let minIndex = -1;
+		for (let i = 0; i < this.pieces_qty; i++) {
+			if (this.pieces[i] == null) {
+				const piecePosition = new Vector3();
+				piece.localToWorld(piecePosition);
+				console.log("piece" , piecePosition);
+				const shelfPosition = new Vector3();
+				this.localToWorld(shelfPosition);
+				shelfPosition.add(this.piecePositions[i]);
+				const dist = piecePosition.distanceTo(shelfPosition);
+				if (dist < minDist) {
+					console.log(dist);
+					minDist = dist;
+					minIndex = i;
+				}
+			}
+		}
+
+		if (minDist < 5) {
+			this.pieces[minIndex] = piece;
+			piece.position.set(this.piecePositions[minIndex].x, this.piecePositions[minIndex].y, this.piecePositions[minIndex].z);
+			piece.show(this);
+			return true;
+		}
+
+		return false;
 	}
 }
