@@ -15,15 +15,20 @@ import A3 from './model/pieces/revolution/a3.js';
 import A4 from './model/pieces/revolution/a4.js';
 import House from './model/house.js';
 
+/**
+ * Creates a new scene, camera and renderer.
+ */
 const scene = new Scene();
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new WebGLRenderer();
-
-
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+
+/**
+ * Lights
+ */
 const light = new DirectionalLight(0x404040, 2);
 scene.add(light);
 
@@ -31,7 +36,7 @@ const ambientLight = new AmbientLight(0x404040, 3);
 scene.add(ambientLight);
 
 /**
- * GUI
+ * GUI Configuration
  */
 const gui = new GUI();
 const options = {
@@ -64,17 +69,30 @@ gui.add(options, 'Forma', { A1: 0, A2: 1, A3: 2, A4: 3, B1: 4, B2: 5, B3: 6, B4:
 
 gui.add(options, 'Imprimir');
 
+
+/**
+ * Initial Camera Position
+ */
 camera.position.z = 50;
 camera.position.y = 20;
 camera.position.x = 10;
 
+
+/**
+ * Camera Controls
+ */
 let orbital = true;
 let fp = false;
 let controls = new OrbitControls(camera, renderer.domElement);
 controls.update();
 controls.target.set(scene.position.x, scene.position.y, scene.position.z);
 let relativeCameraOffset = new Vector3(0, 15, -25);
+// zoom in/out with o/p keys
 
+
+/**
+ * Galpon (traducir a ingles)
+ */
 const house = new House({
 	x: 0,
 	y: 0,
@@ -88,6 +106,10 @@ house.show(scene);
 var gridHelper = new GridHelper(200, 20, 0x000000, 0x000000);
 scene.add(gridHelper);
 
+
+/**
+ * Car
+ */
 const car = new Car({
 	color: 0x009900,
 	x: 0,
@@ -102,6 +124,10 @@ const car = new Car({
 });
 car.show(scene);
 
+
+/**
+ * Shelf
+ */
 const shelf = new Shelf({
 	color: 0x009900,
 	width: 60,
@@ -113,7 +139,18 @@ const shelf = new Shelf({
 });
 shelf.show(scene);
 
-const printer = new Printer({ color: 0x009900, x: -40, y: 3, z: 0, width: 12, height: 6, depth: 10 });
+
+/**
+ * Printer
+ */
+const printer = new Printer({ 
+	color: 0x009900, 
+	x: -40, 
+	y: 3, 
+	z: 0, 
+	width: 12, 
+	height: 6, 
+	depth: 10 });
 printer.show(scene);
 
 let lastTime;
@@ -152,6 +189,8 @@ const KEY_CODES = {
 	Q: 81,
 	E: 69,
 	G: 71,
+	O: 79,
+	P: 80,
 	one: 49,
 	two: 50,
 	three: 51,
@@ -163,6 +202,9 @@ const KEY_CODES = {
 document.addEventListener('keydown', onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {
 	switch (event.which) {
+		/**
+		 * Move car
+		 */
 		case KEY_CODES.W:
 			car.moveForward();
 			break;
@@ -175,12 +217,18 @@ function onDocumentKeyDown(event) {
 		case KEY_CODES.D:
 			car.rotateRight();
 			break;
+		/**
+		 * Lift control
+		 */
 		case KEY_CODES.Q:
 			car.liftUp();
 			break;
 		case KEY_CODES.E:
 			car.liftDown();
 			break;
+		/**
+		 * Grab/Drop piece
+		 */
 		case KEY_CODES.G:
 			const grabbed = car.grabPiece(printer);
 			if (!grabbed && car.piece) {
@@ -190,6 +238,19 @@ function onDocumentKeyDown(event) {
 				}
 			}
 			break;
+		/**
+		 * Zoom in/out
+		 */
+		case KEY_CODES.O:
+			console.log('O');
+			controls.zoomOut();
+			break;
+		case KEY_CODES.P:
+			controls.zoomIn();
+			break;
+		/**
+		 * Cameras
+		 */
 		case KEY_CODES.one:
 			orbital = true;
 			controls.target.set(scene.position.x, scene.position.y, scene.position.z);

@@ -484,6 +484,11 @@ class OrbitControls extends EventDispatcher {
 
 		}
 
+		this.zoomOut = function () {
+			dollyOut( getZoomScale() );
+
+		}
+
 		function dollyIn( dollyScale ) {
 
 			if ( scope.object.isPerspectiveCamera ) {
@@ -503,6 +508,10 @@ class OrbitControls extends EventDispatcher {
 
 			}
 
+		}
+
+		this.zoomIn = function () {
+			dollyIn( getZoomScale() );
 		}
 
 		//
