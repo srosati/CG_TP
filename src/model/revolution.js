@@ -8,7 +8,7 @@ import {
 	Vector2,
 	Vector3,
 	Curve
-} from '../../../build/three.module.js';
+} from 'three';
 
 export default class Revolution extends Mesh {
 	constructor({

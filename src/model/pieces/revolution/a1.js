@@ -1,9 +1,17 @@
-import { Shape } from '../../../../../build/three.module.js';
+import { Shape } from 'three';
 
 import RevolutionPiece from './revolution_piece.js';
 
 export default class A1 extends RevolutionPiece {
-	constructor({ x = 0, y = 0, z = 0, color = 0xffffff, steps = 10, height = 10, radius = 3 }) {
+	constructor({
+		x = 0,
+		y = 0,
+		z = 0,
+		color = 0xffffff,
+		steps = 10,
+		height = 10,
+		radius = 3
+	}) {
 		console.log(height);
 		const rad = radius;
 		const shape = new Shape();

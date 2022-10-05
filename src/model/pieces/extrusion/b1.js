@@ -1,9 +1,18 @@
-import { Shape } from '../../../../../build/three.module.js';
+import { Shape } from 'three';
 
 import ExtrusionPiece from './extrusion_piece.js';
 
 export default class B1 extends ExtrusionPiece {
-	constructor({ x = 0, y = 0, z = 0, color, twist = 0, sideLen = 5, height = 10, steps = 100 }) {
+	constructor({
+		x = 0,
+		y = 0,
+		z = 0,
+		color,
+		twist = 0,
+		sideLen = 5,
+		height = 10,
+		steps = 100
+	}) {
 		// Triangle Shape
 		const h = (Math.sqrt(3) * sideLen) / 2;
 		const shape = new Shape();

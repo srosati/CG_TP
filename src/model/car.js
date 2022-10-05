@@ -1,4 +1,4 @@
-import { Object3D, Shape, Vector2, Vector3 } from '../../../build/three.module.js';
+import { Object3D, Shape, Vector2, Vector3 } from 'three';
 import Extrusion from './extrusion.js';
 import Lift from './lift.js';
 import Revolution from './revolution.js';
@@ -23,9 +23,19 @@ class Body extends Extrusion {
 			[-shortLen, -height]
 		];
 
-		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+		const shape = new Shape(
+			points.map((point) => new Vector2(point[0], point[1]))
+		);
 
-		super({ color, shape, depth: bodyWidth, rotation: [0, Math.PI / 2, 0], x: 0, y: 0, z: 0 });
+		super({
+			color,
+			shape,
+			depth: bodyWidth,
+			rotation: [0, Math.PI / 2, 0],
+			x: 0,
+			y: 0,
+			z: 0
+		});
 		this.translateZ(-bodyWidth / 2);
 	}
 
@@ -35,7 +45,17 @@ class Body extends Extrusion {
 }
 
 class BodyDecoration extends Extrusion {
-	constructor({ color, width, shortLen, longLen, height, x, y, z, mirror = true }) {
+	constructor({
+		color,
+		width,
+		shortLen,
+		longLen,
+		height,
+		x,
+		y,
+		z,
+		mirror = true
+	}) {
 		const points = [
 			[0, 0],
 			[mirror ? longLen - shortLen : 0, height],
@@ -44,9 +64,19 @@ class BodyDecoration extends Extrusion {
 			[0, 0]
 		];
 
-		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+		const shape = new Shape(
+			points.map((point) => new Vector2(point[0], point[1]))
+		);
 
-		super({ color, shape, depth: width, rotation: [0, Math.PI / 2, 0], x, y, z });
+		super({
+			color,
+			shape,
+			depth: width,
+			rotation: [0, Math.PI / 2, 0],
+			x,
+			y,
+			z
+		});
 		this.translateZ(-width / 2);
 	}
 }
@@ -66,11 +96,21 @@ class Wheel extends Revolution {
 			[-width, 0]
 		];
 
-		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+		const shape = new Shape(
+			points.map((point) => new Vector2(point[0], point[1]))
+		);
 
 		const mul = isLeft ? 1 : -1;
 
-		super({ color, radius, shape, x, y, z, rotation: [0, (mul * Math.PI) / 2, 0] });
+		super({
+			color,
+			radius,
+			shape,
+			x,
+			y,
+			z,
+			rotation: [0, (mul * Math.PI) / 2, 0]
+		});
 		this.radius = radius;
 		this.speed = 0;
 	}
@@ -132,7 +172,14 @@ export default class Car extends Object3D {
 		const offsetZ = (bodyLength - wheelRadius) / 2.5;
 
 		this.wheels = [];
-		this.generateWheels(wheelColor, wheelRadius, wheelDepth, offsetX, offsetY, offsetZ);
+		this.generateWheels(
+			wheelColor,
+			wheelRadius,
+			wheelDepth,
+			offsetX,
+			offsetY,
+			offsetZ
+		);
 
 		this.lift = new Lift({
 			height: 5 * bodyHeight,
@@ -236,7 +283,8 @@ export default class Car extends Object3D {
 	}
 
 	grabPiece(printer) {
-		if (printer == null || printer.piece == null || this.piece != null) return false;
+		if (printer == null || printer.piece == null || this.piece != null)
+			return false;
 		const piecePosition = new Vector3();
 		const platformPosition = new Vector3();
 		printer.piece.localToWorld(piecePosition);

@@ -1,0 +1,32 @@
+{
+	"name": "cg_tp",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"build": "webpack --config webpack.config.cjs",
+		"start": "serve -s dist",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/srosati/CG_TP.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/srosati/CG_TP/issues"
+	},
+	"homepage": "https://github.com/srosati/CG_TP#readme",
+	"dependencies": {
+		"three": "^0.143.0"
+	},
+	"devDependencies": {
+		"@effortlessmotion/html-webpack-inline-source-plugin": "^1.0.3",
+		"html-webpack-plugin": "^5.5.0",
+		"serve": "^14.0.1",
+		"webpack": "^5.74.0",
+		"webpack-cli": "^4.10.0"
+	}
+}

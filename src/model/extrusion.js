@@ -1,7 +1,22 @@
-import { Shape, ExtrudeGeometry, Mesh, MeshPhysicalMaterial, Vector2 } from '../../../build/three.module.js';
+import {
+	Shape,
+	ExtrudeGeometry,
+	Mesh,
+	MeshPhysicalMaterial,
+	Vector2
+} from 'three';
 
 export default class Extrusion extends Mesh {
-	constructor({ color, shape, depth, rotation = [0, 0, 0], material = MeshPhysicalMaterial, x, y, z }) {
+	constructor({
+		color,
+		shape,
+		depth,
+		rotation = [0, 0, 0],
+		material = MeshPhysicalMaterial,
+		x,
+		y,
+		z
+	}) {
 		// const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
 		const geometry = new ExtrudeGeometry(shape, {
 			depth: depth,

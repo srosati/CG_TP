@@ -1,4 +1,11 @@
-import { MeshPhysicalMaterial, Mesh, Object3D, BoxGeometry, Vector2, Vector3 } from '../../../build/three.module.js';
+import {
+	MeshPhysicalMaterial,
+	Mesh,
+	Object3D,
+	BoxGeometry,
+	Vector2,
+	Vector3
+} from 'three';
 
 class Bar extends Mesh {
 	constructor(color, width, height, x, y, z) {
@@ -19,12 +26,12 @@ class Rack extends Mesh {
 }
 
 export default class Shelf extends Object3D {
-	bars_qty = 9;
-	racks_qty = 3;
-	pieces_qty = 18;
-
 	constructor({ color, width, height, depth, x, y, z }) {
 		super();
+
+		this.bars_qty = 9;
+		this.racks_qty = 3;
+		this.pieces_qty = 18;
 
 		this.bars = [];
 		this.racks = [];
@@ -59,8 +66,12 @@ export default class Shelf extends Object3D {
 
 	generateBars(height, width, depth, x, y, z) {
 		for (let i = 0; i < this.bars_qty; i++) {
-			this.bars.push(new Bar(0xc8da49, 0.5, height, (i * width) / 8, height / 2, 0));
-			this.bars.push(new Bar(0xc8da49, 0.5, height, (i * width) / 8, height / 2, depth));
+			this.bars.push(
+				new Bar(0xc8da49, 0.5, height, (i * width) / 8, height / 2, 0)
+			);
+			this.bars.push(
+				new Bar(0xc8da49, 0.5, height, (i * width) / 8, height / 2, depth)
+			);
 		}
 	}
 
@@ -81,12 +92,15 @@ export default class Shelf extends Object3D {
 	}
 
 	generatePiecePositions(height, width, depth) {
-		this.piecePositions = []
+		this.piecePositions = [];
 		for (let i = 0; i < this.pieces_qty; i++) {
-			const shelfPosition = new Vector3((i % 8) * width / 8 + width / 16, (1 + Math.floor(i / 8)) * height / 3 - 0.5, depth / 2);
+			const shelfPosition = new Vector3(
+				((i % 8) * width) / 8 + width / 16,
+				((1 + Math.floor(i / 8)) * height) / 3 - 0.5,
+				depth / 2
+			);
 			this.piecePositions.push(shelfPosition);
 		}
-		
 	}
 
 	addPiece(piece) {
@@ -96,7 +110,7 @@ export default class Shelf extends Object3D {
 			if (this.pieces[i] == null) {
 				const piecePosition = new Vector3();
 				piece.localToWorld(piecePosition);
-				console.log("piece" , piecePosition);
+				console.log('piece', piecePosition);
 				const shelfPosition = new Vector3();
 				this.localToWorld(shelfPosition);
 				shelfPosition.add(this.piecePositions[i]);
@@ -111,7 +125,11 @@ export default class Shelf extends Object3D {
 
 		if (minDist < 5) {
 			this.pieces[minIndex] = piece;
-			piece.position.set(this.piecePositions[minIndex].x, this.piecePositions[minIndex].y, this.piecePositions[minIndex].z);
+			piece.position.set(
+				this.piecePositions[minIndex].x,
+				this.piecePositions[minIndex].y,
+				this.piecePositions[minIndex].z
+			);
 			piece.show(this);
 			return true;
 		}

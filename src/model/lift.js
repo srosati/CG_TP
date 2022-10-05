@@ -1,4 +1,4 @@
-import { Object3D, BoxGeometry, MeshPhysicalMaterial, Mesh } from '../../../build/three.module.js';
+import { Object3D, BoxGeometry, MeshPhysicalMaterial, Mesh } from 'three';
 
 class Bar extends Mesh {
 	constructor({ color, width, height, length = width, x, y, z }) {
@@ -49,7 +49,17 @@ class Platform extends Mesh {
 }
 
 export default class Lift extends Object3D {
-	constructor({ height, barColor, barSeparation, barWidth, platformColor, platformWidth, x = 0, y = 0, z = 0 }) {
+	constructor({
+		height,
+		barColor,
+		barSeparation,
+		barWidth,
+		platformColor,
+		platformWidth,
+		x = 0,
+		y = 0,
+		z = 0
+	}) {
 		super();
 
 		this.bar_l = new Bar({

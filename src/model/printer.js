@@ -6,7 +6,7 @@ import {
 	BoxGeometry,
 	Shape,
 	Vector2
-} from '../../../build/three.module.js';
+} from 'three';
 
 import Revolution from './revolution.js';
 import Extrusion from './extrusion.js';
@@ -29,8 +29,18 @@ class Body extends Revolution {
 			[-halfH, 0]
 		];
 
-		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
-		super({ shape, color, radius, rotation: [Math.PI / 2, 0, 0], x, y, z /*, material: MeshBasicMaterial*/ });
+		const shape = new Shape(
+			points.map((point) => new Vector2(point[0], point[1]))
+		);
+		super({
+			shape,
+			color,
+			radius,
+			rotation: [Math.PI / 2, 0, 0],
+			x,
+			y,
+			z /*, material: MeshBasicMaterial*/
+		});
 	}
 }
 
@@ -72,8 +82,22 @@ class Extruder extends Mesh {
 export default class Printer extends Object3D {
 	constructor({ color, height, width, x, y, z }) {
 		super();
-		this.body = new Body({ color: 0xc8b4aa, height: height, width: width, x: 0, y: 0, z: 0 });
-		this.arm = new Arm({ color: 0xc8b4aa, height: height * 2, width: width, x: -0.4 * width, y: height * 2, z: 0 });
+		this.body = new Body({
+			color: 0xc8b4aa,
+			height: height,
+			width: width,
+			x: 0,
+			y: 0,
+			z: 0
+		});
+		this.arm = new Arm({
+			color: 0xc8b4aa,
+			height: height * 2,
+			width: width,
+			x: -0.4 * width,
+			y: height * 2,
+			z: 0
+		});
 		this.height = height;
 		this.position.set(x, y, z);
 	}
@@ -91,7 +115,8 @@ export default class Printer extends Object3D {
 		this.printingAnimation = this.piece instanceof Extrusion;
 		this.updateDepth = true;
 		console.log(this.printingAnimation);
-		if (this.printingAnimation) this.arm.extruder.position.setY(-1.5 * this.height);
+		if (this.printingAnimation)
+			this.arm.extruder.position.setY(-1.5 * this.height);
 
 		this.piece.show(this);
 	}
