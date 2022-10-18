@@ -21,6 +21,7 @@
 	},
 	"homepage": "https://github.com/srosati/CG_TP#readme",
 	"dependencies": {
+		"dat.gui": "^0.7.9",
 		"three": "^0.143.0"
 	},
 	"devDependencies": {

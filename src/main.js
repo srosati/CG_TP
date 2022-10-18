@@ -1,14 +1,6 @@
-import {
-	Scene,
-	PerspectiveCamera,
-	WebGLRenderer,
-	Vector3,
-	GridHelper,
-	DirectionalLight,
-	AmbientLight
-} from 'three';
-import { OrbitControls } from './libs/OrbitControls.js';
-import { GUI } from './libs/dat.gui.module.js';
+import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight } from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GUI } from 'dat.gui';
 
 import Car from './model/car.js';
 import Shelf from './model/shelf.js';
@@ -27,12 +19,7 @@ import House from './model/house.js';
  * Creates a new scene, camera and renderer.
  */
 const scene = new Scene();
-const camera = new PerspectiveCamera(
-	75,
-	window.innerWidth / window.innerHeight,
-	0.1,
-	1000
-);
+const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -76,9 +63,7 @@ const options = {
 	AnguloDeTorsion: 0,
 	Imprimir: () => {
 		selectedPiece =
-			POSSIBLE_PIECES[superficie][
-				superficie == SUPERFICIES.Revolucion ? formaRevolucion : formaBarrido
-			];
+			POSSIBLE_PIECES[superficie][superficie == SUPERFICIES.Revolucion ? formaRevolucion : formaBarrido];
 		printer.print(selectedPiece, pieceOptions);
 	}
 };
@@ -104,23 +89,17 @@ gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
 	pieceOptions.height = val;
 });
 
-gui
-	.add(options, 'Superficie', { Revolucion: 0, Barrido: 1 })
-	.onChange((val) => {
-		superficie = val;
-	});
+gui.add(options, 'Superficie', { Revolucion: 0, Barrido: 1 }).onChange((val) => {
+	superficie = val;
+});
 
-gui
-	.add(options, 'FormaRevolucion', { A1: 0, A2: 1, A3: 2, A4: 3 })
-	.onChange((val) => {
-		formaRevolucion = val;
-	});
+gui.add(options, 'FormaRevolucion', { A1: 0, A2: 1, A3: 2, A4: 3 }).onChange((val) => {
+	formaRevolucion = val;
+});
 
-gui
-	.add(options, 'FormaBarrido', { B1: 0, B2: 1, B3: 2, B4: 3 })
-	.onChange((val) => {
-		formaBarrido = val;
-	});
+gui.add(options, 'FormaBarrido', { B1: 0, B2: 1, B3: 2, B4: 3 }).onChange((val) => {
+	formaBarrido = val;
+});
 
 gui.add(options, 'Imprimir');
 
@@ -218,11 +197,7 @@ function animate(currentTime) {
 	if (orbital) {
 		controls.update();
 	} else {
-		let auxCameraOffset = new Vector3(
-			relativeCameraOffset.x,
-			relativeCameraOffset.y,
-			relativeCameraOffset.z
-		);
+		let auxCameraOffset = new Vector3(relativeCameraOffset.x, relativeCameraOffset.y, relativeCameraOffset.z);
 		let cameraOffset = auxCameraOffset.applyMatrix4(car.matrixWorld);
 
 		camera.position.x = cameraOffset.x;
@@ -311,11 +286,7 @@ function onDocumentKeyDown(event) {
 			break;
 		case KEY_CODES.two:
 			orbital = true;
-			controls.target.set(
-				printer.position.x,
-				printer.position.y,
-				printer.position.z
-			);
+			controls.target.set(printer.position.x, printer.position.y, printer.position.z);
 			break;
 		case KEY_CODES.three:
 			orbital = true;
