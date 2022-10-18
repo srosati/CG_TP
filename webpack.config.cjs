@@ -5,10 +5,12 @@ module.exports = {
 	entry: __dirname + '/src/main.js',
 	output: {
 		path: __dirname + '/dist',
-		filename: 'index_bundle.js'
+		filename: 'index_bundle.js',
+		publicPath: ''
 	},
-	plugins: [
-		new HtmlWebpackPlugin({ inlineSource: '.js$', inject: 'body' }),
-		new HtmlWebpackInlineSourcePlugin()
-	]
+	plugins: [new HtmlWebpackPlugin({ inlineSource: '.js$', inject: 'body' }), new HtmlWebpackInlineSourcePlugin()],
+	devServer: {
+		port: 3000,
+		hot: true
+	}
 };
