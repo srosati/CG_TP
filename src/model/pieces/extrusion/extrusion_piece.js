@@ -3,8 +3,9 @@ import Extrusion from '../../extrusion.js';
 import { Vector3, Quaternion, Plane } from 'three';
 
 export default class ExtrusionPiece extends Extrusion {
-	constructor({ x = 0, y = 0, z = 0, color, twist = 0, height = 10, shape }) {
-		super({ shape, depth: height, color, x, y, z, rotation: [-Math.PI / 2, 0, 0] });
+	constructor({ x = 0, y = 0, z = 0, texture, twist = 0, height = 10, shape }) {
+		console.log(texture);
+		super({ shape, depth: height, x, y, z, rotation: [-Math.PI / 2, 0, 0], texture });
 
 		this.height = height;
 		this.acc_height = 0;

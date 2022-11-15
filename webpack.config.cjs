@@ -15,5 +15,14 @@ module.exports = {
 		liveReload: false,
 		hot: true,
 		watchFiles: ['src/**/*']
+	},
+	module: {
+		rules: [
+			{
+				test: /\.(png|svg|jpg|jpeg|gif)$/i,
+				type: 'asset/resource',
+				use: 'file-loader?name=./maps/[name].[ext]'
+			}
+		]
 	}
 };

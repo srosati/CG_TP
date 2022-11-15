@@ -3,16 +3,7 @@ import { Shape } from 'three';
 import ExtrusionPiece from './extrusion_piece.js';
 
 export default class B2 extends ExtrusionPiece {
-	constructor({
-		x = 0,
-		y = 0,
-		z = 0,
-		color,
-		twist = 0,
-		width = 5,
-		height = 10,
-		steps = 500
-	}) {
+	constructor({ x = 0, y = 0, z = 0, texture, twist = 0, width = 5, height = 10, steps = 500 }) {
 		// Star Shape
 		const rad = width / 2;
 		const offsetRad = rad / 4;
@@ -38,6 +29,6 @@ export default class B2 extends ExtrusionPiece {
 			prevY = newY;
 		}
 
-		super({ shape, x, y, z, color, twist, height, steps });
+		super({ shape, x, y, z, texture, twist, height, steps });
 	}
 }

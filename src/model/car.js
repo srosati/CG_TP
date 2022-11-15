@@ -1,10 +1,21 @@
-import { Object3D, Shape, Vector2, Vector3 } from 'three';
+import {
+	Object3D,
+	Shape,
+	Vector2,
+	Vector3,
+	TextureLoader,
+	RepeatWrapping,
+	ClampToEdgeWrapping,
+	MirroredRepeatWrapping
+} from 'three';
 import Extrusion from './extrusion.js';
 import Lift from './lift.js';
 import Revolution from './revolution.js';
 
+import '../maps/texturaGrua.jpg';
+import '../maps/rueda.jpg';
 class Body extends Extrusion {
-	constructor({ color, bodyLength, bodyHeight, bodyWidth }) {
+	constructor({ bodyLength, bodyHeight, bodyWidth }) {
 		const shortHeight = 0.25 * bodyHeight;
 		const shortLen = 0.4 * bodyLength;
 
@@ -23,18 +34,21 @@ class Body extends Extrusion {
 			[-shortLen, -height]
 		];
 
-		const shape = new Shape(
-			points.map((point) => new Vector2(point[0], point[1]))
-		);
+		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+		const texture = new TextureLoader().load('maps/texturaGrua.jpg');
+
+		texture.wrapS = texture.wrapT = RepeatWrapping;
+		texture.repeat.set(1 / 6, 1 / 6);
+		texture.offset.set(0.1, 0.5);
 
 		super({
-			color,
 			shape,
 			depth: bodyWidth,
 			rotation: [0, Math.PI / 2, 0],
 			x: 0,
 			y: 0,
-			z: 0
+			z: 0,
+			texture
 		});
 		this.translateZ(-bodyWidth / 2);
 	}
@@ -45,17 +59,7 @@ class Body extends Extrusion {
 }
 
 class BodyDecoration extends Extrusion {
-	constructor({
-		color,
-		width,
-		shortLen,
-		longLen,
-		height,
-		x,
-		y,
-		z,
-		mirror = true
-	}) {
+	constructor({ color, width, shortLen, longLen, height, x, y, z, mirror = true }) {
 		const points = [
 			[0, 0],
 			[mirror ? longLen - shortLen : 0, height],
@@ -64,9 +68,7 @@ class BodyDecoration extends Extrusion {
 			[0, 0]
 		];
 
-		const shape = new Shape(
-			points.map((point) => new Vector2(point[0], point[1]))
-		);
+		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
 
 		super({
 			color,
@@ -96,14 +98,13 @@ class Wheel extends Revolution {
 			[-width, 0]
 		];
 
-		const shape = new Shape(
-			points.map((point) => new Vector2(point[0], point[1]))
-		);
+		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+		const texture = new TextureLoader().load('maps/rueda.jpg');
 
 		const mul = isLeft ? 1 : -1;
 
 		super({
-			color,
+			texture,
 			radius,
 			shape,
 			x,
@@ -172,14 +173,7 @@ export default class Car extends Object3D {
 		const offsetZ = (bodyLength - wheelRadius) / 2.5;
 
 		this.wheels = [];
-		this.generateWheels(
-			wheelColor,
-			wheelRadius,
-			wheelDepth,
-			offsetX,
-			offsetY,
-			offsetZ
-		);
+		this.generateWheels(wheelColor, wheelRadius, wheelDepth, offsetX, offsetY, offsetZ);
 
 		this.lift = new Lift({
 			height: 5 * bodyHeight,
@@ -283,8 +277,7 @@ export default class Car extends Object3D {
 	}
 
 	grabPiece(printer) {
-		if (printer == null || printer.piece == null || this.piece != null)
-			return false;
+		if (printer == null || printer.piece == null || this.piece != null) return false;
 		const piecePosition = new Vector3();
 		const platformPosition = new Vector3();
 		printer.piece.localToWorld(piecePosition);

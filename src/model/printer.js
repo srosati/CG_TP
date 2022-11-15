@@ -1,7 +1,19 @@
-import { Object3D, CylinderGeometry, MeshPhysicalMaterial, Mesh, BoxGeometry, Shape, Vector2 } from 'three';
+import {
+	Object3D,
+	CylinderGeometry,
+	MeshPhysicalMaterial,
+	Mesh,
+	BoxGeometry,
+	Shape,
+	Vector2,
+	TextureLoader,
+	RepeatWrapping
+} from 'three';
 
 import Revolution from './revolution.js';
-import Extrusion from './extrusion.js';
+
+import '../maps/Pattern02_1K_VarA.png';
+import '../maps/Pattern05_1K_VarA.png';
 
 class Body extends Revolution {
 	constructor({ color, height, width, x, y, z }) {
@@ -54,7 +66,7 @@ class Arm extends Mesh {
 }
 
 class Extruder extends Mesh {
-	constructor({ color, height, width }) {
+	constructor({ height, width }) {
 		const cubeGeometry = new BoxGeometry(width, 0.1, width);
 		const cubeMaterial = new MeshPhysicalMaterial({ color: 0xf1dcc9 });
 		super(cubeGeometry, cubeMaterial);
@@ -101,8 +113,17 @@ export default class Printer extends Object3D {
 	print(piece, options) {
 		if (this.piece) return;
 
-		this.piece = new piece({ ...options, y: this.height / 2 });
+		const texture = new TextureLoader().load('maps/Pattern05_1K_VarA.png');
+		texture.wrapS = texture.wrapT = RepeatWrapping;
+		texture.repeat.set(1.5, 1.5);
+		texture.offset.set(0, 0);
+
+		this.piece = new piece({ ...options, y: this.height / 2, texture: texture });
+
+		this.piece.geometry.computeBoundingBox();
+
 		this.updateDepth = true;
+
 		this.arm.extruder.position.setY(-1.5 * this.height);
 
 		this.piece.show(this);

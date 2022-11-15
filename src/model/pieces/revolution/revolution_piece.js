@@ -2,22 +2,21 @@ import Revolution from '../../revolution.js';
 
 import { BufferAttribute, Plane, Vector3 } from 'three';
 export default class RevolutionPiece extends Revolution {
-	constructor({ shape, x = 0, y = 0, z = 0, color = 0xffffff, radius, height = 10 }) {
+	constructor({ shape, x = 0, y = 0, z = 0, texture, radius, height = 10 }) {
 		super({
 			shape,
 			depth: 2 * Math.PI,
-			color,
+			texture,
 			x,
 			y,
 			z,
 			rotation: [Math.PI / 2, 0, 0],
-			radius
+			radius: Math.pow(10, -10)
 		});
 
 		this.height = height;
 		this.radius = radius;
 		this.shape = shape;
-		this.color = color;
 		this.acc_height = 0;
 		this.print_speed = 0.01;
 
