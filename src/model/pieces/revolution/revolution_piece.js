@@ -2,7 +2,7 @@ import Revolution from '../../revolution.js';
 
 import { BufferAttribute, Plane, Vector3 } from 'three';
 export default class RevolutionPiece extends Revolution {
-	constructor({ shape, x = 0, y = 0, z = 0, color = 0xffffff, radius }) {
+	constructor({ shape, x = 0, y = 0, z = 0, color = 0xffffff, radius, height = 10 }) {
 		super({
 			shape,
 			depth: 2 * Math.PI,
@@ -14,6 +14,7 @@ export default class RevolutionPiece extends Revolution {
 			radius
 		});
 
+		this.height = height;
 		this.radius = radius;
 		this.shape = shape;
 		this.color = color;
@@ -29,7 +30,7 @@ export default class RevolutionPiece extends Revolution {
 	}
 
 	update(dt) {
-		if (this.acc_height >= 10) return -1;
+		if (this.acc_height >= this.height) return -1;
 
 		let depth = this.print_speed * dt;
 		if (this.acc_height + depth > this.height) depth = this.height - this.acc_height;

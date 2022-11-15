@@ -3,15 +3,7 @@ import { Shape } from 'three';
 import RevolutionPiece from './revolution_piece.js';
 
 export default class A1 extends RevolutionPiece {
-	constructor({
-		x = 0,
-		y = 0,
-		z = 0,
-		color = 0xffffff,
-		steps = 10,
-		height = 10,
-		radius = 3
-	}) {
+	constructor({ x = 0, y = 0, z = 0, color = 0xffffff, steps = 10, height = 10, radius = 3 }) {
 		console.log(height);
 		const rad = radius;
 		const shape = new Shape();
@@ -30,6 +22,6 @@ export default class A1 extends RevolutionPiece {
 		shape.lineTo(height, -rad);
 		shape.lineTo(height, 0);
 
-		super({ shape, x, y, z, color, steps, radius: 0.00001 });
+		super({ shape, x, y, z, color, steps, radius: 0.00001, height });
 	}
 }
