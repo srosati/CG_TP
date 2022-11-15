@@ -1,14 +1,4 @@
-import {
-	Shape,
-	ExtrudeGeometry,
-	Mesh,
-	MeshNormalMaterial,
-	MeshPhongMaterial,
-	MeshPhysicalMaterial,
-	Vector2,
-	Vector3,
-	Curve
-} from 'three';
+import { ExtrudeGeometry, Mesh, MeshPhysicalMaterial, Vector3, Curve } from 'three';
 
 export default class Revolution extends Mesh {
 	constructor({
@@ -33,7 +23,7 @@ export default class Revolution extends Mesh {
 			extrudePath: path
 		});
 
-		const mat = new material({ color: color });
+		const mat = new material({ color });
 		super(geometry, mat);
 		this.rotateX(rotation[0]);
 		this.rotateY(rotation[1]);

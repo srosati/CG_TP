@@ -1,12 +1,4 @@
-import {
-	Object3D,
-	CylinderGeometry,
-	MeshPhysicalMaterial,
-	Mesh,
-	BoxGeometry,
-	Shape,
-	Vector2
-} from 'three';
+import { Object3D, CylinderGeometry, MeshPhysicalMaterial, Mesh, BoxGeometry, Shape, Vector2 } from 'three';
 
 import Revolution from './revolution.js';
 import Extrusion from './extrusion.js';
@@ -29,9 +21,7 @@ class Body extends Revolution {
 			[-halfH, 0]
 		];
 
-		const shape = new Shape(
-			points.map((point) => new Vector2(point[0], point[1]))
-		);
+		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
 		super({
 			shape,
 			color,
@@ -112,11 +102,8 @@ export default class Printer extends Object3D {
 		if (this.piece) return;
 
 		this.piece = new piece({ ...options, y: this.height / 2 });
-		this.printingAnimation = this.piece instanceof Extrusion;
 		this.updateDepth = true;
-		console.log(this.printingAnimation);
-		if (this.printingAnimation)
-			this.arm.extruder.position.setY(-1.5 * this.height);
+		this.arm.extruder.position.setY(-1.5 * this.height);
 
 		this.piece.show(this);
 	}
@@ -124,9 +111,7 @@ export default class Printer extends Object3D {
 	update(dt) {
 		if (this.piece && this.updateDepth != -1) {
 			this.updateDepth = this.piece.update(dt);
-			if (this.printingAnimation) {
-				this.arm.update(this.updateDepth);
-			}
+			this.arm.update(this.updateDepth);
 		}
 	}
 

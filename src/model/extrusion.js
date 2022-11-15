@@ -1,26 +1,11 @@
-import {
-	Shape,
-	ExtrudeGeometry,
-	Mesh,
-	MeshPhysicalMaterial,
-	Vector2
-} from 'three';
+import { Shape, ExtrudeGeometry, Mesh, MeshPhysicalMaterial, Vector2 } from 'three';
 
 export default class Extrusion extends Mesh {
-	constructor({
-		color,
-		shape,
-		depth,
-		rotation = [0, 0, 0],
-		material = MeshPhysicalMaterial,
-		x,
-		y,
-		z
-	}) {
-		// const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+	constructor({ color, shape, depth, rotation = [0, 0, 0], material = MeshPhysicalMaterial, x, y, z }) {
 		const geometry = new ExtrudeGeometry(shape, {
 			depth: depth,
-			bevelEnabled: false
+			bevelEnabled: false,
+			steps: 600
 		});
 
 		const mat = new material({ color: color });

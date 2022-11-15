@@ -23,6 +23,8 @@ const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight,
 
 const renderer = new WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.localClippingEnabled = true;
+
 document.body.appendChild(renderer.domElement);
 
 /**
