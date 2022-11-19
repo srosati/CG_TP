@@ -5,8 +5,9 @@ import {
 	Vector3,
 	TextureLoader,
 	RepeatWrapping,
-	ClampToEdgeWrapping,
-	MirroredRepeatWrapping
+	MeshPhysicalMaterial,
+	CylinderGeometry,
+	Mesh
 } from 'three';
 import Extrusion from './extrusion.js';
 import Lift from './lift.js';
@@ -83,45 +84,34 @@ class BodyDecoration extends Extrusion {
 	}
 }
 
-class Wheel extends Revolution {
-	constructor({ color, radius, depth, x, y, z, isLeft }) {
-		const width = depth / 2;
-		const shortWidth = 0.5 * width;
-
-		const points = [
-			[-width, 0],
-			[width, 0],
-			[width, 0.3 * radius],
-			[shortWidth, 0.4 * radius],
-			[shortWidth, radius],
-			[-width, radius],
-			[-width, 0]
-		];
-
-		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
+class Wheel extends Mesh {
+	constructor({ radius, depth, x, y, z, isLeft }) {
 		const texture = new TextureLoader().load('maps/rueda.jpg');
 
-		const mul = isLeft ? 1 : -1;
+		const geometry = new CylinderGeometry(radius, radius, depth, 128);
 
-		super({
-			texture,
-			radius,
-			shape,
-			x,
-			y,
-			z,
-			rotation: [0, (mul * Math.PI) / 2, 0]
-		});
+		const texturedMaterial = new MeshPhysicalMaterial({ map: texture });
+		const greyMaterial = new MeshPhysicalMaterial({ color: 0x323232 });
+		const materials = [greyMaterial, texturedMaterial, greyMaterial];
+		super(geometry, materials);
+		this.position.set(x, y, z);
 		this.radius = radius;
 		this.speed = 0;
+		this.mul = isLeft ? -1 : 1;
+		this.rotateX(Math.PI / 2);
+		this.rotateZ((-1 * this.mul * Math.PI) / 2);
+	}
+
+	show(parent) {
+		parent.add(this);
 	}
 
 	update(dt) {
-		this.rotateZ(this.speed * dt);
+		this.rotateY(this.speed * dt);
 	}
 
 	rotate(speed) {
-		this.speed = speed / this.radius;
+		this.speed = (this.mul * speed) / this.radius;
 	}
 
 	stopRotate() {
