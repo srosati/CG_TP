@@ -136,9 +136,6 @@ const house = new House({
 });
 house.show(scene);
 
-var gridHelper = new GridHelper(200, 20, 0x000000, 0x000000);
-scene.add(gridHelper);
-
 /**
  * Car
  */
