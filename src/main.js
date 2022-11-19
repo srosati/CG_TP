@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight, PointLight } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
 
@@ -30,11 +30,12 @@ document.body.appendChild(renderer.domElement);
 /**
  * Lights
  */
-const light = new DirectionalLight(0x404040, 2);
-scene.add(light);
+// const light = new DirectionalLight(0x404040, 2);
+// scene.add(light);
 
-const ambientLight = new AmbientLight(0x404040, 3);
+const ambientLight = new AmbientLight(0x404040, 0.5);
 scene.add(ambientLight);
+
 
 /**
  * GUI Configuration

@@ -7,7 +7,10 @@ import {
 	Shape,
 	Vector2,
 	TextureLoader,
-	RepeatWrapping
+	RepeatWrapping,
+	SphereGeometry,
+	MeshPhongMaterial,
+	PointLight
 } from 'three';
 
 import Revolution from './revolution.js';
@@ -71,16 +74,46 @@ class Extruder extends Mesh {
 		const cubeMaterial = new MeshPhysicalMaterial({ color: 0xf1dcc9 });
 		super(cubeGeometry, cubeMaterial);
 		this.position.set(width / 2, height / 2, 0);
+		this.extruderLights = [
+			new ExtruderLight({ x: width/2, z: width/2 }),
+			new ExtruderLight({ x: width/2, z: -width/2 }),
+			new ExtruderLight({ x: -width/2, z: width/2 }),
+			new ExtruderLight({ x: -width/2, z: -width/2 })
+		];
 	}
 
 	show(parent) {
 		parent.add(this);
+		this.extruderLights.forEach((extruderLight) => extruderLight.show(this));
 	}
 
 	update(depth) {
 		if (depth > 0) this.translateY(depth);
 	}
 }
+
+class ExtruderLight extends Mesh {
+	constructor({x, z }) {
+		const sphereGeometry = new SphereGeometry(0.5, 32, 32);
+		const sphereMaterial = new MeshPhongMaterial({
+			emissive: 0xffffff,
+			emissiveIntensity: 0.9, });
+		super(sphereGeometry, sphereMaterial);
+		this.position.set(x, 0, z);
+		this.light = new PointLight( 0xffffff, 0.25, 30 );
+		this.light.position.set( x, 0, z );
+	}
+
+	show(parent) {
+		parent.add(this);
+		parent.add(this.light);
+	}
+
+	update(depth) {
+		if (depth > 0) this.translateY(depth);
+	}
+}
+
 export default class Printer extends Object3D {
 	constructor({ color, height, width, x, y, z }) {
 		super();
@@ -144,3 +177,5 @@ export default class Printer extends Object3D {
 		return piece;
 	}
 }
+
+
