@@ -15,6 +15,9 @@ import {
 
 import Revolution from './revolution.js';
 
+import '../maps/Marble03_1K_BaseColor.png';
+import '../maps/Marble09_1K_BaseColor.png';
+import '../maps/patron3.png';
 import '../maps/Pattern02_1K_VarA.png';
 import '../maps/Pattern05_1K_VarA.png';
 
@@ -146,7 +149,7 @@ export default class Printer extends Object3D {
 	print(piece, options) {
 		if (this.piece) return;
 
-		const texture = new TextureLoader().load('maps/Pattern05_1K_VarA.png');
+		const texture = new TextureLoader().load(options.texture);
 		texture.wrapS = texture.wrapT = RepeatWrapping;
 		texture.repeat.set(1.5, 1.5);
 		texture.offset.set(0, 0);
