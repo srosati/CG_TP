@@ -78,10 +78,10 @@ class Extruder extends Mesh {
 		super(cubeGeometry, cubeMaterial);
 		this.position.set(width / 2, height / 2, 0);
 		this.extruderLights = [
-			new ExtruderLight({ x: width/2, z: width/2 }),
-			new ExtruderLight({ x: width/2, z: -width/2 }),
-			new ExtruderLight({ x: -width/2, z: width/2 }),
-			new ExtruderLight({ x: -width/2, z: -width/2 })
+			new ExtruderLight({ x: width / 2, z: width / 2 }),
+			new ExtruderLight({ x: width / 2, z: -width / 2 }),
+			new ExtruderLight({ x: -width / 2, z: width / 2 }),
+			new ExtruderLight({ x: -width / 2, z: -width / 2 })
 		];
 	}
 
@@ -96,15 +96,16 @@ class Extruder extends Mesh {
 }
 
 class ExtruderLight extends Mesh {
-	constructor({x, z }) {
+	constructor({ x, z }) {
 		const sphereGeometry = new SphereGeometry(0.5, 32, 32);
 		const sphereMaterial = new MeshPhongMaterial({
 			emissive: 0xffffff,
-			emissiveIntensity: 0.9, });
+			emissiveIntensity: 0.9
+		});
 		super(sphereGeometry, sphereMaterial);
 		this.position.set(x, 0, z);
-		this.light = new PointLight( 0xffffff, 0.25, 30 );
-		this.light.position.set( x, 0, z );
+		this.light = new PointLight(0xffffff, 0.25, 30);
+		this.light.position.set(x, 0, z);
 	}
 
 	show(parent) {
@@ -151,7 +152,7 @@ export default class Printer extends Object3D {
 
 		const texture = new TextureLoader().load(options.texture);
 		texture.wrapS = texture.wrapT = RepeatWrapping;
-		texture.repeat.set(1.5, 1.5);
+		texture.repeat.set(16, 16);
 		texture.offset.set(0, 0);
 
 		this.piece = new piece({ ...options, y: this.height / 2, texture: texture });
@@ -180,5 +181,3 @@ export default class Printer extends Object3D {
 		return piece;
 	}
 }
-
-

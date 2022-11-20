@@ -9,12 +9,12 @@ export default class A3 extends RevolutionPiece {
 		const shape = new Shape();
 
 		shape.moveTo(0, 0);
-		shape.lineTo(0, -radius);
-		shape.lineTo(0.15 * height, -smallRad);
-		shape.lineTo(0.25 * height, -smallRad);
-		shape.bezierCurveTo(0.3 * height, -medRad, 0.35 * height, -medRad, 0.4 * height, -medRad);
-		shape.lineTo(0.85 * height, -medRad);
-		shape.bezierCurveTo(0.9 * height, -medRad, 0.85 * height, -radius * 0.35, height, -smallRad);
+		shape.lineTo(radius, 0);
+		shape.lineTo(smallRad, 0.15 * height);
+		shape.lineTo(smallRad, 0.25 * height);
+		shape.bezierCurveTo(medRad, 0.3 * height, medRad, 0.35 * height, medRad, 0.4 * height);
+		shape.lineTo(medRad, 0.85 * height);
+		shape.bezierCurveTo(medRad, 0.9 * height, radius * 0.35, 0.85 * height, smallRad, height);
 
 		super({ shape, x, y, z, texture, steps, height });
 	}

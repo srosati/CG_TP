@@ -4,14 +4,13 @@ import { Vector3, Quaternion, Plane } from 'three';
 
 export default class ExtrusionPiece extends Extrusion {
 	constructor({ x = 0, y = 0, z = 0, texture, twist = 0, height = 10, shape }) {
-		console.log(texture);
 		super({ shape, depth: height, x, y, z, rotation: [-Math.PI / 2, 0, 0], texture });
 
 		this.height = height;
 		this.acc_height = 0;
 		this.twist = twist;
 		this.shape = shape;
-		this.print_speed = 0.004;
+		this.print_speed = 0.006;
 
 		const pos = new Vector3(0, 0, 0);
 		this.getWorldPosition(pos);

@@ -1,24 +1,20 @@
 import Revolution from '../../revolution.js';
 
-import { BufferAttribute, Plane, Vector3 } from 'three';
-export default class RevolutionPiece extends Revolution {
+import { BufferAttribute, Mesh, Plane, Vector3, LatheGeometry, MeshPhysicalMaterial } from 'three';
+export default class RevolutionPiece extends Mesh {
 	constructor({ shape, x = 0, y = 0, z = 0, texture, radius, height = 10 }) {
-		super({
-			shape,
-			depth: 2 * Math.PI,
-			texture,
-			x,
-			y,
-			z,
-			rotation: [Math.PI / 2, 0, 0],
-			radius: Math.pow(10, -10)
-		});
+		const points = shape.getSpacedPoints(256);
+		const geometry = new LatheGeometry(points, 256);
+
+		const material = new MeshPhysicalMaterial({ map: texture });
+		super(geometry, material);
+		this.position.set(x, y, z);
 
 		this.height = height;
 		this.radius = radius;
 		this.shape = shape;
 		this.acc_height = 0;
-		this.print_speed = 0.01;
+		this.print_speed = 0.006;
 
 		const pos = new Vector3(0, 0, 0);
 		this.getWorldPosition(pos);
@@ -29,7 +25,10 @@ export default class RevolutionPiece extends Revolution {
 	}
 
 	update(dt) {
-		if (this.acc_height >= this.height) return -1;
+		if (this.acc_height >= this.height) {
+			this.material.clippingPlanes = [];
+			return -1;
+		}
 
 		let depth = this.print_speed * dt;
 		if (this.acc_height + depth > this.height) depth = this.height - this.acc_height;
@@ -40,5 +39,9 @@ export default class RevolutionPiece extends Revolution {
 		this.clippingPlane.constant = this.planeY;
 
 		return depth;
+	}
+
+	show(parent) {
+		parent.add(this);
 	}
 }

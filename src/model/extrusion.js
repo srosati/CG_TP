@@ -5,7 +5,7 @@ export default class Extrusion extends Mesh {
 		const geometry = new ExtrudeGeometry(shape, {
 			depth: depth,
 			bevelEnabled: false,
-			steps: 600
+			steps: 512
 		});
 
 		const mat = new material({ color: color, map: texture });

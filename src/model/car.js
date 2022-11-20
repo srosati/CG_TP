@@ -277,7 +277,6 @@ export default class Car extends Object3D {
 
 		this.piece = printer.removePiece();
 		this.piece.position.y = 0;
-		this.piece.rotateZ(Math.PI / 2);
 		this.piece.show(this.lift.platform);
 		return true;
 	}
