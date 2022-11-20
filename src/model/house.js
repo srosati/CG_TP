@@ -5,7 +5,11 @@ import {
 	MeshPhysicalMaterial,
 	TextureLoader,
 	RepeatWrapping,
-	MirroredRepeatWrapping
+	MirroredRepeatWrapping,
+	CylinderGeometry,
+	MeshPhongMaterial,
+	SpotLight,
+	SpotLightHelper
 } from 'three';
 
 import '../maps/StoneTilesFloor01_1K_BaseColor.png';
@@ -51,6 +55,15 @@ export default class House extends Object3D {
 		this.bottomWall.position.y = height / 2;
 		this.bottomWall.position.x = -width / 2;
 		this.bottomWall.rotateY(Math.PI / 2);
+
+		this.lamps = [
+			new Lamp({ x: width / 4, y: height, z: 0 }),
+			new Lamp({ x: width / 4, y: height, z: depth / 4 }),
+			new Lamp({ x: width / 4, y: height, z: -depth / 4 }),
+			new Lamp({ x: -width / 4, y: height, z: 0 }),
+			new Lamp({ x: -width / 4, y: height, z: depth / 4 }),
+			new Lamp({ x: -width / 4, y: height, z: -depth / 4 })
+		];
 	}
 
 	show(parent) {
@@ -61,5 +74,28 @@ export default class House extends Object3D {
 		parent.add(this.rightWall);
 		parent.add(this.topWall);
 		parent.add(this.bottomWall);
+		this.lamps.forEach((lamp) => lamp.show(this));
+	}
+}
+
+class Lamp extends Mesh {
+	constructor({ x, y, z }) {
+		const cylinderGeometry = new CylinderGeometry(2, 2, 1, 32);
+		const cylinderMaterial = new MeshPhongMaterial({
+			emissive: 0xffffff,
+			emissiveIntensity: 0.9, });
+		super(cylinderGeometry, cylinderMaterial);
+		this.position.set(x, y, z);
+		this.light = new SpotLight(0xffffff, 1, 100, Math.PI/2, 0.5);
+		this.light.position.set( x, y, z);
+		this.lightTarget = new Object3D();
+		this.lightTarget.position.set(x, 0, z);
+		this.light.target = this.lightTarget;
+	}
+
+	show(parent) {
+		parent.add(this);
+		parent.add(this.light);
+		parent.add(this.lightTarget);
 	}
 }

@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight, PointLight, Texture } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
 
@@ -30,11 +30,12 @@ document.body.appendChild(renderer.domElement);
 /**
  * Lights
  */
-const light = new DirectionalLight(0x404040, 2);
-scene.add(light);
+// const light = new DirectionalLight(0x404040, 2);
+// scene.add(light);
 
-const ambientLight = new AmbientLight(0x404040, 3);
+const ambientLight = new AmbientLight(0x404040, 0.5);
 scene.add(ambientLight);
+
 
 /**
  * GUI Configuration
@@ -55,9 +56,17 @@ const FORMAS_BARRIDO = {
 	B3: 2,
 	B4: 3
 };
+const TEXTURA = [
+	'maps/Marble03_1K_BaseColor.png',
+	'maps/Marble09_1K_BaseColor.png',
+	'maps/patron3.png',
+	'maps/Pattern02_1K_VarA.png',
+	'maps/Pattern05_1K_VarA.png',
+]
 
 const gui = new GUI();
 const options = {
+	Textura: TEXTURA[0],
 	Superficie: SUPERFICIES.Revolucion,
 	FormaRevolucion: FORMAS_REVOLUCION.A1,
 	FormaBarrido: FORMAS_BARRIDO.B1,
@@ -76,7 +85,8 @@ let formaRevolucion = FORMAS_REVOLUCION.A1;
 let formaBarrido = FORMAS_BARRIDO.B1;
 let pieceOptions = {
 	twist: 0,
-	height: 10
+	height: 10,
+	texture: TEXTURA[0]
 };
 
 const POSSIBLE_PIECES = [
@@ -89,6 +99,10 @@ gui.add(options, 'AnguloDeTorsion', 0, 360, 10).onChange((val) => {
 
 gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
 	pieceOptions.height = val;
+});
+
+gui.add(options, 'Textura', {T1: 0, T2: 1, T3: 2, T4: 3, T5: 4}).onChange((val) => {
+	pieceOptions.texture = TEXTURA[val];
 });
 
 gui.add(options, 'Superficie', { Revolucion: 0, Barrido: 1 }).onChange((val) => {
