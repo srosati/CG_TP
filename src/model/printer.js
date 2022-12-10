@@ -150,9 +150,11 @@ export default class Printer extends Object3D {
 	print(piece, options) {
 		if (this.piece) return;
 
-		const texture = new TextureLoader().load(options.texture);
+		const texture = new TextureLoader().load(options.texture.path);
 		texture.wrapS = texture.wrapT = RepeatWrapping;
-		texture.repeat.set(16, 16);
+		const repeat = options.repeat;
+		console.log(repeat);
+		texture.repeat.set(repeat, repeat);
 		texture.offset.set(0, 0);
 
 		this.piece = new piece({ ...options, y: this.height / 2, texture: texture });

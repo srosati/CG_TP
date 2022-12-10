@@ -21,7 +21,7 @@ import House from './model/house.js';
 const scene = new Scene();
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-const renderer = new WebGLRenderer();
+const renderer = new WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.localClippingEnabled = true;
 
@@ -56,17 +56,17 @@ const FORMAS_BARRIDO = {
 	B3: 2,
 	B4: 3
 };
-const TEXTURA = [
-	'maps/Marble03_1K_BaseColor.png',
-	'maps/Marble09_1K_BaseColor.png',
-	'maps/patron3.png',
-	'maps/Pattern02_1K_VarA.png',
-	'maps/Pattern05_1K_VarA.png',
+const TEXTURE = [
+	{path: 'maps/Marble03_1K_BaseColor.png', repeat: [2, 0.1]},
+	{path: 'maps/Marble09_1K_BaseColor.png', repeat: [3, 0.3]},
+	{path: 'maps/patron3.png', repeat: [16, 0.3]},
+	{path: 'maps/Pattern02_1K_VarA.png', repeat: [16, 1]},
+	{path: 'maps/Pattern05_1K_VarA.png', repeat: [16, 1]}
 ]
 
 const gui = new GUI();
 const options = {
-	Textura: TEXTURA[0],
+	Textura: TEXTURE[0],
 	Superficie: SUPERFICIES.Revolucion,
 	FormaRevolucion: FORMAS_REVOLUCION.A1,
 	FormaBarrido: FORMAS_BARRIDO.B1,
@@ -75,6 +75,8 @@ const options = {
 	Imprimir: () => {
 		selectedPiece =
 			POSSIBLE_PIECES[superficie][superficie == SUPERFICIES.Revolucion ? formaRevolucion : formaBarrido];
+		
+		pieceOptions.repeat = pieceOptions.texture.repeat[superficie];
 		printer.print(selectedPiece, pieceOptions);
 	}
 };
@@ -86,13 +88,15 @@ let formaBarrido = FORMAS_BARRIDO.B1;
 let pieceOptions = {
 	twist: 0,
 	height: 10,
-	texture: TEXTURA[0]
+	texture: TEXTURE[0]
 };
 
 const POSSIBLE_PIECES = [
 	[A1, A2, A3, A4],
 	[B1, B2, B3, B4]
 ];
+
+
 gui.add(options, 'AnguloDeTorsion', 0, 360, 10).onChange((val) => {
 	pieceOptions.twist = (val * Math.PI) / 180;
 });
@@ -102,7 +106,7 @@ gui.add(options, 'Altura', 1, 10, 1).onChange((val) => {
 });
 
 gui.add(options, 'Textura', {T1: 0, T2: 1, T3: 2, T4: 3, T5: 4}).onChange((val) => {
-	pieceOptions.texture = TEXTURA[val];
+	pieceOptions.texture = TEXTURE[val];
 });
 
 gui.add(options, 'Superficie', { Revolucion: 0, Barrido: 1 }).onChange((val) => {

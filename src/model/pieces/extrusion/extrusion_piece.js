@@ -18,11 +18,13 @@ export default class ExtrusionPiece extends Extrusion {
 
 		this.clippingPlane = new Plane(new Vector3(0, -1, 0), this.planeY);
 		this.material.clippingPlanes = [this.clippingPlane];
+		this.doneTwisting = false;
 		this.twistMesh();
 	}
 
 	update(dt) {
 		if (this.acc_height >= this.height) return -1;
+		if (!this.doneTwisting) return 0;
 
 		let depth = this.print_speed * dt;
 		if (this.acc_height + depth > this.height) depth = this.height - this.acc_height;
@@ -37,17 +39,21 @@ export default class ExtrusionPiece extends Extrusion {
 	}
 
 	twistMesh() {
-		this.vertices = this.geometry.attributes.position.array;
+		const vertices = this.geometry.getAttribute( 'position' );
+		console.log(vertices);
 		const quaternion = new Quaternion();
 		const upVec = new Vector3(0, 0, 1);
 
 		let maxZ = 0;
-		for (let i = 2; i < this.vertices.length; i += 3) if (this.vertices[i] > maxZ) maxZ = this.vertices[i];
+		for (let i = 0; i < vertices.count; i ++) {
+			if (vertices.getZ(i) > maxZ) 
+				maxZ = vertices.getZ(i);
+		}
 
-		for (let i = 0; i < this.vertices.length; i += 3) {
-			let x = this.vertices[i];
-			let y = this.vertices[i + 1];
-			let z = this.vertices[i + 2];
+		for (let i = 0; i < vertices.count; i++) {
+			let x = vertices.getX(i);
+			let y = vertices.getY(i);
+			let z = vertices.getZ(i);
 
 			const angle = this.twist * (z / maxZ);
 			quaternion.setFromAxisAngle(upVec, angle);
@@ -55,13 +61,12 @@ export default class ExtrusionPiece extends Extrusion {
 			const vector = new Vector3(x, y, z);
 			vector.applyQuaternion(quaternion);
 
-			this.vertices[i] = vector.x;
-			this.vertices[i + 1] = vector.y;
-			this.vertices[i + 2] = vector.z;
+			vertices.setXYZ(i, vector.x, vector.y, vector.z);
 		}
 
 		// tells Three.js to re-render this mesh
-		this.geometry.verticesNeedUpdate = true;
 		this.geometry.computeVertexNormals();
+		this.geometry.attributes.position.needsUpdate = true
+		this.doneTwisting = true;
 	}
 }
