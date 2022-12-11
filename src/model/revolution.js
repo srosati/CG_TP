@@ -11,7 +11,8 @@ export default class Revolution extends Mesh {
 		y = 0,
 		z = 0,
 		depth = 2 * Math.PI,
-		texture
+		texture,
+		reflectionCube
 	}) {
 		const path = new Curve();
 		path.getPoint = function (t) {
@@ -24,7 +25,7 @@ export default class Revolution extends Mesh {
 			extrudePath: path
 		});
 
-		const mat = new material({ color, map: texture });
+		const mat = new material({ color, map: texture, envMap: reflectionCube });
 		super(geometry, mat);
 		this.rotateX(rotation[0]);
 		this.rotateY(rotation[1]);

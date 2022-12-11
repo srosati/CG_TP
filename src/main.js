@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, GridHelper, DirectionalLight, AmbientLight, PointLight, Texture } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, Vector3, AmbientLight, CubeTextureLoader } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
 
@@ -15,10 +15,26 @@ import A3 from './model/pieces/revolution/a3.js';
 import A4 from './model/pieces/revolution/a4.js';
 import House from './model/house.js';
 
+import './maps/greyRoom1_right.jpg';
+import './maps/greyRoom1_left.jpg';
+import './maps/greyRoom1_top.jpg';
+import './maps/greyRoom1_bottom.jpg';
+import './maps/greyRoom1_front.jpg';
+import './maps/greyRoom1_back.jpg';
+
 /**
  * Creates a new scene, camera and renderer.
  */
 const scene = new Scene();
+const reflectionCube = new CubeTextureLoader()
+.setPath('./maps/')
+.load(['greyRoom1_right.jpg', 
+	'greyRoom1_left.jpg',
+	'greyRoom1_top.jpg',
+	'greyRoom1_bottom.jpg',
+	'greyRoom1_front.jpg',
+	'greyRoom1_back.jpg']);
+scene.background = reflectionCube;
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new WebGLRenderer({antialias: true});
@@ -189,13 +205,14 @@ shelf.show(scene);
  * Printer
  */
 const printer = new Printer({
-	color: 0x009900,
+	color: 0xbcd3d6,
 	x: -40,
 	y: 3,
 	z: 0,
 	width: 12,
 	height: 6,
-	depth: 10
+	depth: 10,
+	reflectionCube: reflectionCube
 });
 printer.show(scene);
 

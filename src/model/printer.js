@@ -10,7 +10,8 @@ import {
 	RepeatWrapping,
 	SphereGeometry,
 	MeshPhongMaterial,
-	PointLight
+	PointLight,
+	MeshLambertMaterial
 } from 'three';
 
 import Revolution from './revolution.js';
@@ -22,7 +23,7 @@ import '../maps/Pattern02_1K_VarA.png';
 import '../maps/Pattern05_1K_VarA.png';
 
 class Body extends Revolution {
-	constructor({ color, height, width, x, y, z }) {
+	constructor({ color, height, width, x, y, z, reflectionCube }) {
 		const halfH = height / 2;
 		const radius = width / 2;
 		const bevelHeight = 0.1 * height;
@@ -41,20 +42,23 @@ class Body extends Revolution {
 
 		const shape = new Shape(points.map((point) => new Vector2(point[0], point[1])));
 		super({
-			shape,
 			color,
+			shape,
 			radius,
 			rotation: [Math.PI / 2, 0, 0],
+			material: MeshLambertMaterial,
+			reflectionCube: reflectionCube,
 			x,
 			y,
-			z /*, material: MeshBasicMaterial*/
+			z, /*, material: MeshBasicMaterial*/
+			
 		});
 	}
 }
 
 class Arm extends Mesh {
 	constructor({ color, height, width, x, y, z }) {
-		const geometry = new CylinderGeometry(0.2, 0.2, height * 2, 16);
+		const geometry = new CylinderGeometry(0.4, 0.4, height * 2, 16);
 		const material = new MeshPhysicalMaterial({ color: 0xccd7b6 });
 		super(geometry, material);
 		this.position.set(x, y, z);
@@ -74,7 +78,7 @@ class Arm extends Mesh {
 class Extruder extends Mesh {
 	constructor({ height, width }) {
 		const cubeGeometry = new BoxGeometry(width, 0.1, width);
-		const cubeMaterial = new MeshPhysicalMaterial({ color: 0xf1dcc9 });
+		const cubeMaterial = new MeshPhysicalMaterial({ color: 0x2b9e29 });
 		super(cubeGeometry, cubeMaterial);
 		this.position.set(width / 2, height / 2, 0);
 		this.extruderLights = [
@@ -119,15 +123,16 @@ class ExtruderLight extends Mesh {
 }
 
 export default class Printer extends Object3D {
-	constructor({ color, height, width, x, y, z }) {
+	constructor({ color, height, width, x, y, z, reflectionCube }) {
 		super();
 		this.body = new Body({
-			color: 0xc8b4aa,
+			color: color,
 			height: height,
 			width: width,
 			x: 0,
 			y: 0,
-			z: 0
+			z: 0,
+			reflectionCube: reflectionCube
 		});
 		this.arm = new Arm({
 			color: 0xc8b4aa,
