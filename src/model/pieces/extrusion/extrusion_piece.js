@@ -23,7 +23,11 @@ export default class ExtrusionPiece extends Extrusion {
 	}
 
 	update(dt) {
-		if (this.acc_height >= this.height) return -1;
+		if (this.acc_height >= this.height) {
+			this.material.clippingPlanes = [];
+			return -1;
+		}
+		
 		if (!this.doneTwisting) return 0;
 
 		let depth = this.print_speed * dt;
