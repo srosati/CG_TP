@@ -82,7 +82,7 @@ const TEXTURE = [
 
 const gui = new GUI();
 const options = {
-	Textura: TEXTURE[0],
+	Textura: 0,
 	Superficie: SUPERFICIES.Revolucion,
 	FormaRevolucion: FORMAS_REVOLUCION.A1,
 	FormaBarrido: FORMAS_BARRIDO.B1,
